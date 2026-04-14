@@ -1,12 +1,23 @@
 const InterviewSession = require("../../models/InterviewSession");
-const { detectFillerWords, calculateWordsPerMinute } = require("../../utils/scoreCalculator");
+const {
+  detectFillerWords,
+  calculateWordsPerMinute,
+  calculateGrammarScore,
+  calculateFillerScore,
+  calculateConfidenceScore,
+  calculateSpeechScore,
+  calculateOverallScore,
+  calculateSpeechSentimentScore,
+  calculateMultimodalScore,
+  generateFeedback,
+} = require("../../utils/scoreCalculator");
 const { askGroq, parseModelJson } = require("./groqClient");
 
 const submitAnswer = async (req, res) => {
   try {
     const { sessionId, question, originalAnswer, duration, emotionSummary, dominantEmotion } = req.body;
 
-    const { fillerWordCount } = detectFillerWords(originalAnswer);
+    const { fillerWords, fillerWordCount } = detectFillerWords(originalAnswer);
     const wpm = calculateWordsPerMinute(originalAnswer, duration);
 
     const aiPrompt = `
@@ -48,17 +59,46 @@ const submitAnswer = async (req, res) => {
       followUps = [];
     }
 
+    const totalWords = String(originalAnswer || "").trim().split(/\s+/).filter(Boolean).length;
+    const normalizedEmotionSummary = {
+      angry: Number(emotionSummary?.angry || 0),
+      disgust: Number(emotionSummary?.disgust || 0),
+      fear: Number(emotionSummary?.fear || 0),
+      happy: Number(emotionSummary?.happy || 0),
+      neutral: Number(emotionSummary?.neutral || 0),
+      sad: Number(emotionSummary?.sad || 0),
+      surprise: Number(emotionSummary?.surprise || 0),
+    };
+
+    const grammarScore = calculateGrammarScore(
+      Math.max(0, Math.round((100 - Number(aiData.grammarScore || 70)) * (totalWords / 100))),
+      totalWords
+    );
+    const fillerScore = calculateFillerScore(fillerWordCount, totalWords);
+    const confidenceScore = calculateConfidenceScore(normalizedEmotionSummary, grammarScore, fillerScore);
+    const speechScore = calculateSpeechScore(wpm);
+    const speechSentimentScore = calculateSpeechSentimentScore(originalAnswer);
+    const multimodalScore = calculateMultimodalScore(confidenceScore, speechSentimentScore);
+    const overallScore = calculateOverallScore(multimodalScore, grammarScore, speechScore, fillerScore);
+    const feedbackText = `${aiData.feedback || ""} ${generateFeedback(overallScore, wpm, fillerWordCount, grammarScore)}`.trim();
+
     const answerData = {
       question,
       originalAnswer,
       correctedAnswer: aiData.improvedText,
       dominantEmotion,
-      emotionSummary,
+      emotionSummary: normalizedEmotionSummary,
+      fillerWords,
       followUpQuestions: followUps,
-      grammarScore: aiData.grammarScore,
-      overallScore: Math.round((aiData.grammarScore + aiData.relevanceScore) / 2),
+      confidenceScore,
+      grammarScore,
+      speechScore,
+      fillerScore,
+      speechSentimentScore,
+      multimodalScore,
+      overallScore,
       duration,
-      feedback: aiData.feedback,
+      feedback: feedbackText,
       fillerWordCount,
       wordsPerMinute: wpm,
     };

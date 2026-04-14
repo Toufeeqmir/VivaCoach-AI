@@ -3,6 +3,16 @@ const FILLER_WORDS = [
   "literally", "actually", "so", "right", "okay", "hmm"
 ];
 
+const POSITIVE_SPEECH_WORDS = [
+  "confident", "learned", "improved", "achieved", "led", "built", "delivered",
+  "solved", "collaborated", "success", "growth", "clear", "strong",
+];
+
+const NEGATIVE_SPEECH_WORDS = [
+  "can't", "cannot", "failed", "confused", "unsure", "weak", "difficult",
+  "problem", "issue", "stuck", "nervous", "maybe", "idk",
+];
+
 const detectFillerWords = (text) => {
   if (!text) return { fillerWords: [], fillerWordCount: 0 };
 
@@ -81,6 +91,31 @@ const calculateOverallScore = (confidenceScore, grammarScore, speechScore, fille
   );
 };
 
+const calculateSpeechSentimentScore = (text = "") => {
+  const words = String(text)
+    .toLowerCase()
+    .replace(/[^a-z\s']/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+
+  if (words.length === 0) return 50;
+
+  let positive = 0;
+  let negative = 0;
+  words.forEach((w) => {
+    if (POSITIVE_SPEECH_WORDS.includes(w)) positive += 1;
+    if (NEGATIVE_SPEECH_WORDS.includes(w)) negative += 1;
+  });
+
+  const signal = positive - negative;
+  const density = signal / Math.max(6, Math.ceil(words.length / 4));
+  return Math.max(0, Math.min(100, Math.round(50 + density * 20)));
+};
+
+const calculateMultimodalScore = (confidenceScore, speechSentimentScore) => {
+  return Math.round(confidenceScore * 0.6 + speechSentimentScore * 0.4);
+};
+
 const generateFeedback = (overallScore, wordsPerMinute, fillerWordCount, grammarScore) => {
   const feedback = [];
 
@@ -131,6 +166,8 @@ module.exports = {
   calculateConfidenceScore,
   calculateSpeechScore,
   calculateOverallScore,
+  calculateSpeechSentimentScore,
+  calculateMultimodalScore,
   generateFeedback,
   getDominantEmotion,
 };

@@ -40,6 +40,7 @@ export function useInterviewController({ initialMode } = {}) {
   const [answerResult, setAnswerResult] = useState(null);
   const [finalResult, setFinalResult] = useState(null);
 
+  // Start camera on mount, stop on unmount
   useEffect(() => {
     startCamera();
     return () => {

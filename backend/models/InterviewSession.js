@@ -61,6 +61,8 @@ const AnswerSchema = new mongoose.Schema({
   grammarScore:    { type: Number, default: 0 },
   speechScore:     { type: Number, default: 0 },
   fillerScore:     { type: Number, default: 0 },
+  speechSentimentScore: { type: Number, default: 0 },
+  multimodalScore: { type: Number, default: 0 },
   overallScore:    { type: Number, default: 0 },
   duration:        { type: Number, default: 0 },
   feedback:        { type: String, default: "" },

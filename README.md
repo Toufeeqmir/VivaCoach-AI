@@ -1,74 +1,102 @@
-# Facial Expression & Speech Correction Application
+# VivaCoach-AI
 
-This repository contains a **Node/Express backend**, a **Python AI microservice**, and a **React/Vite frontend**. The AI service performs facial expression detection using a Keras model and optional Whisper speech-to-text transcription.
+AI-powered interview practice platform with real-time communication feedback.
 
-## Running the Application Locally
+This project includes:
+- `backend`: Node.js + Express API (auth, sessions, interview, coach, expression/speech analysis)
+- `prepai`: React + Vite frontend
 
-###
+## Tech Stack
 
-   ```bash
-   cd backend
-  
-   ```
-3. Place your trained `facial_expression_model.h5` inside `backend/session.controller.js` (or the service will return dummy values).
+- Frontend: React, Vite, React Router, Axios
+- Backend: Node.js, Express, MongoDB (Mongoose), JWT
+- AI integrations: Hugging Face endpoint and LLM providers via API keys
 
-   ```
-   It listens on port `8000` by default.
+## Project Structure
 
-You can also run the backend in development mode along with the AI service via npm script:
-```bash
-cd backend
-npm install
-npm run dev:all       # requires `concurrently` globally or as a project dependency
+```text
+.
+├── backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   └── server.js
+└── prepai/
+    ├── src/
+    │   ├── api/
+    │   ├── coach/
+    │   ├── features/
+    │   └── pages/
+    └── vite.config.js
 ```
 
-### 2. Node/Express backend
+## Prerequisites
 
-1. In `backend/.env` set the following variables:
-   ```env
-   PORT=3000          # or any free port
-   AI_SERVICE_URL=http://localhost:8000   # point to your local Python service
-   MONGO_URI=mongodb://localhost:27017/facial_speech_db
-   JWT_SECRET=your_secret
-   ```
-2. Install dependencies and start:
+- Node.js 18+
+- npm 9+
+- MongoDB running locally or a cloud MongoDB URI
+
+## Backend Setup (`backend`)
+
+1. Install dependencies:
    ```bash
    cd backend
    npm install
-   npm run dev         # or `npm start` for production
    ```
 
-### 3. React frontend
+2. Create a `.env` file inside `backend` and configure:
+   ```env
+   PORT=5001
+   NODE_ENV=development
+   MONGO_URI=mongodb://localhost:27017/facial_speech_db
+   JWT_SECRET=your_jwt_secret
+   JWT_EXPIRES_IN=7d
 
-1. Update proxy in `frontend/vite.config.js` to match the backend port (defaults to 3000):
-   ```js
-   server: {
-     proxy: {
-       "/api": {
-         target: "http://localhost:3000",
-         changeOrigin: true,
-       }
-     }
-   }
+   GEMINI_API_KEY=your_key
+   GROQ_API_KEY=your_key
+
+   AI_SERVICE_URL=https://your-ai-service-url
+   HF_MODEL_URL=https://your-hf-model-endpoint
+   HF_API_TOKEN=your_hf_token
    ```
-2. Install and launch:
+
+3. Start the backend:
    ```bash
-   cd frontend
-   npm install
    npm run dev
    ```
+   For production:
+   ```bash
+   npm start
+   ```
 
-The front-end `analyzeExpression` helper already sends camera frames to `/api/expression/analyze`. The backend forwards them to the AI service using `AI_SERVICE_URL`.
+## Frontend Setup (`prepai`)
 
-## Environment Details
+1. Install dependencies:
+   ```bash
+   cd prepai
+   npm install
+   ```
 
-- **Frontend**: React + Vite, camera capture, speech recognition.
-- **Backend**: Express routes for sessions, speech, and expression analysis.
-- **AI microservice**: Flask app exposing `/predict-expression` and `/transcribe` endpoints.
+2. Start the frontend:
+   ```bash
+   npm run dev
+   ```
+   By default, Vite runs on `http://localhost:5173`.
 
-## Notes
+## Common Development Workflow
 
-- Ensure the Python service is running before starting a session, or the backend will respond with a 502 error.
-- You may keep `AI_SERVICE_URL` pointed to a remote service (e.g. a HuggingFace space) if you prefer not to run it locally.
+Run backend and frontend in separate terminals:
 
-Happy coding!
+```bash
+# Terminal 1
+cd backend
+npm run dev
+
+# Terminal 2
+cd prepai
+npm run dev
+```
+
+## Security Note
+
+Do not commit `.env` or real API keys/tokens to GitHub. Rotate secrets immediately if they were exposed.

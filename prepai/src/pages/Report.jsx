@@ -240,12 +240,13 @@ const Report = () => {
             {interviews[0]?.answers?.length > 0 && (
               <div className="bg-[#0d1117] border border-slate-800 rounded-2xl p-6">
                 <h3 className="text-white font-bold mb-5">Latest Session Breakdown</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
                   {[
                     { label: "Grammar", key: "grammarScore", color: "#34d399" },
                     { label: "Confidence", key: "confidenceScore", color: "#06b6d4" },
                     { label: "Speech Pace", key: "speechScore", color: "#fbbf24" },
                     { label: "Filler Words", key: "fillerScore", color: "#c084fc" },
+                    { label: "Multimodal", key: "multimodalScore", color: "#22d3ee" },
                   ].map(({ label, key, color }) => {
                     const avg = Math.round(interviews[0].answers.reduce((a, b) => a + (b[key] || 0), 0) / interviews[0].answers.length);
                     return (
@@ -359,12 +360,13 @@ const Report = () => {
 
                   {/* Mini score bars */}
                   {session.answers?.length > 0 && (
-                    <div className="grid grid-cols-4 gap-3 mt-4">
+                    <div className="grid grid-cols-5 gap-3 mt-4">
                       {[
                         { label: "Grammar", key: "grammarScore", color: "#34d399" },
                         { label: "Confidence", key: "confidenceScore", color: "#06b6d4" },
                         { label: "Speech", key: "speechScore", color: "#fbbf24" },
                         { label: "Fillers", key: "fillerScore", color: "#c084fc" },
+                        { label: "Multimodal", key: "multimodalScore", color: "#22d3ee" },
                       ].map(({ label, key, color }) => {
                         const avg = Math.round(session.answers.reduce((a, b) => a + (b[key] || 0), 0) / session.answers.length);
                         return (
