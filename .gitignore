@@ -3,6 +3,11 @@ node_modules/
 
 # environment variables
 .env
+backend/.env
+
+# generated exports
+repomix-output.xml
+VivaCoach_AI_Project_Report.pdf
 
 # logs
 npm-debug.log*

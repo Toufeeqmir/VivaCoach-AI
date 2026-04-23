@@ -17,7 +17,12 @@ export function normalizeQuestions(raw) {
     .filter(Boolean)
     .map((q) => (typeof q === "string" ? { question: q } : q))
     .filter((q) => typeof q?.question === "string" && q.question.trim().length > 0)
-    .map((q) => ({ question: q.question.trim() }));
+    .map((q) => ({
+      ...q,
+      question: q.question.trim(),
+      questionType: q.questionType || q.type || "primary",
+      focusArea: q.focusArea || q.focus || "",
+    }));
 }
 
 /**

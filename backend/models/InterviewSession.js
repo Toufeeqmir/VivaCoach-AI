@@ -5,6 +5,15 @@ const AnswerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  questionType: {
+    type: String,
+    enum: ["primary", "follow_up", "adaptive"],
+    default: "primary",
+  },
+  focusArea: {
+    type: String,
+    default: "",
+  },
   category: {
     type: String,
     default: "general",
@@ -59,6 +68,9 @@ const AnswerSchema = new mongoose.Schema({
   },
   confidenceScore: { type: Number, default: 0 },
   grammarScore:    { type: Number, default: 0 },
+  relevanceScore:  { type: Number, default: 0 },
+  structureScore:  { type: Number, default: 0 },
+  deliveryScore:   { type: Number, default: 0 },
   speechScore:     { type: Number, default: 0 },
   fillerScore:     { type: Number, default: 0 },
   speechSentimentScore: { type: Number, default: 0 },
@@ -66,6 +78,17 @@ const AnswerSchema = new mongoose.Schema({
   overallScore:    { type: Number, default: 0 },
   duration:        { type: Number, default: 0 },
   feedback:        { type: String, default: "" },
+  recommendedFocus: { type: String, default: "" },
+  adaptiveQuestions: {
+    type: [
+      {
+        question: { type: String, required: true },
+        focus: { type: String, default: "" },
+        type: { type: String, default: "adaptive" },
+      },
+    ],
+    default: [],
+  },
 });
 
 const InterviewSessionSchema = new mongoose.Schema(
@@ -96,4 +119,3 @@ const InterviewSessionSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("InterviewSession", InterviewSessionSchema);
-

@@ -27,6 +27,8 @@ const generateQuestions = async (req, res) => {
       question: typeof q === "string" ? q : q.question,
       category: category || "general",
       difficulty: difficulty || "medium",
+      questionType: "primary",
+      focusArea: category || "general",
     }));
 
     res.status(200).json({ success: true, questions: questionArray });
