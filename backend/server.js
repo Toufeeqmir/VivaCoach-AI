@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const killPort = require("kill-port");
 
 dotenv.config();
 
@@ -10,7 +9,14 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(",").map((origin) => origin.trim())
+  : true;
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -35,42 +41,21 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: "Internal Server Error", error: err.message });
 });
 
-const BASE_PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5001;
 
-const startServer = async (port, maxAttempts = 3, attempt = 1) => {
-  try {
-    const server = app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
-      console.log(`API available at http://localhost:${port}`);
-    });
+const server = app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`API available at http://localhost:${PORT}`);
+});
 
-    process.on("SIGINT", () => {
-      console.log("Shutting down gracefully...");
-      server.close(() => {
-        console.log("Server closed");
-        process.exit(0);
-      });
-      setTimeout(() => {
-        console.error("Forced shutdown after timeout");
-        process.exit(1);
-      }, 10000);
-    });
-  } catch (err) {
-    if (attempt < maxAttempts) {
-      const nextPort = port + 1;
-      console.log(`Port ${port} is in use, trying port ${nextPort}...`);
-      await startServer(nextPort, maxAttempts, attempt + 1);
-    } else {
-      console.error(`Could not find available port after ${maxAttempts} attempts`);
-      process.exit(1);
-    }
-  }
-};
-
-killPort(BASE_PORT)
-  .then(() => {
-    startServer(BASE_PORT);
-  })
-  .catch(() => {
-    startServer(BASE_PORT);
+process.on("SIGINT", () => {
+  console.log("Shutting down gracefully...");
+  server.close(() => {
+    console.log("Server closed");
+    process.exit(0);
   });
+  setTimeout(() => {
+    console.error("Forced shutdown after timeout");
+    process.exit(1);
+  }, 10000);
+});

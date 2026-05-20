@@ -1,3 +1,9 @@
+//This function is doing 4 major jobs:
+//  input Processing: validating message, compute stats(WPM, filler wordsz)
+//   Ai Interactoion: Build prompt, send to LLM , get response
+//   Parsing + safety: Extract structured feedback 
+//   Response Packaging : Ai reply, feedback, communication metrics
+
 const {
   groqText,
   detectFillerWords,
@@ -96,6 +102,7 @@ After your response, provide feedback in this exact format:
         : buildFallbackCoachResponse(message, feedback);
     }
 
+    //final  API Response
     res.status(200).json({
       success: true,
       coachResponse,

@@ -2,6 +2,7 @@ const axios = require("axios");
 const FormData = require("form-data");
 const { correctText } = require("./correct");
 
+//Take audio from frontend and send to AI transcription service
 // @desc    Convert audio to text using the Python AI service (Whisper), then correct it
 // @route   POST /api/speech/transcribe
 // @access  Private
@@ -11,6 +12,7 @@ const transcribeAudio = async (req, res) => {
       return res.status(400).json({ success: false, message: "No audio file provided." });
     }
 
+    // Backend prepares audio for the AI service
     const formData = new FormData();
     formData.append("audio", req.file.buffer, {
       filename: "audio.webm",
@@ -19,6 +21,7 @@ const transcribeAudio = async (req, res) => {
 
     let transcribedText;
     try {
+      // Backend calls python AI services for transcription 
       const aiResponse = await axios.post(`${process.env.AI_SERVICE_URL}/transcribe`, formData, {
         headers: formData.getHeaders(),
         timeout: 20000,

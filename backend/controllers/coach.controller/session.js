@@ -1,3 +1,9 @@
+// startCoaching -> starts the session
+// getCoachSummay -> generates final performance analysis
+
+ //guides users through a conversation session
+ //Analyse both verbal(text/speech) and non-verbal(facial emotions)signals  . gives performance report at the end
+
 const { groqText, detectFillerWords } = require("./shared");
 const {
   calculateConfidenceScore,
@@ -18,11 +24,13 @@ Be warm and encouraging. Topic focus: ${topic}`;
 
     try {
       const raw = await groqText(prompt, 10000);
+      //override fallback if AI works
       if (raw.trim()) openingQuestion = raw.trim();
     } catch (err) {
       console.error("Groq start error:", err.message);
     }
 
+    //Return Response
     res.status(200).json({
       success: true,
       openingQuestion,
@@ -33,6 +41,7 @@ Be warm and encouraging. Topic focus: ${topic}`;
   }
 };
 
+//Ai  generated feedback : 
 const getCoachSummary = async (req, res) => {
   try {
     const { messages = [], emotionSummary = {}, emotionLog = [] } = req.body;
@@ -74,6 +83,7 @@ Return ONLY valid JSON with no extra text:
     let summary = null;
 
     try {
+        // call AI
       const raw = await groqText(prompt, 15000);
       const clean = raw.replace(/```json|```/g, "").trim();
       summary = JSON.parse(clean);

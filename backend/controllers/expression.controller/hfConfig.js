@@ -2,8 +2,8 @@ const HF_TOKEN = process.env.HF_TOKEN || process.env.HF_API_TOKEN;
 
 const CANONICAL = ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"];
 
-const inFlightByUser = new Map();
-const disabledUntilByUser = new Map();
+const inFlightByUser = new Map(); //when request starts
+const disabledUntilByUser = new Map(); //when ends
 
 const GRADIO_SPACE = "https://mir-sajad-01-facial-expression-recognition.hf.space";
 const GRADIO_API_PREFIX = `${GRADIO_SPACE}/gradio_api`;

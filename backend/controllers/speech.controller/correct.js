@@ -2,6 +2,9 @@ const axios = require("axios");
 const Transcript = require("../../models/Transcript");
 const Session = require("../../models/Session");
 
+// Frontend captures spoken text and sends to to the backend 
+ // here the it calls hte gemini api for grammar corrections and returns  structured JSON containing text and correction detaisl 
+
 // @desc    Correct spoken text using Gemini API
 // @route   POST /api/speech/correct-text
 // @access  Private
@@ -61,11 +64,13 @@ Respond with valid JSON only, no extra text.`;
       expressionAtTime: expressionAtTime || "neutral",
     });
 
+    // Session is updated 
     if (session && session.status === "active" && corrections.length > 0) {
       session.totalCorrections += corrections.length;
-      await session.save();
+      await session.save(); // session is saved 
     }
 
+    // Response is sent Back to frontend 
     res.status(200).json({
       success: true,
       originalText,

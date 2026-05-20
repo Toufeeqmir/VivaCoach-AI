@@ -13,6 +13,7 @@ const {
 } = require("../../utils/scoreCalculator");
 const { askGroq, parseModelJson } = require("./groqClient");
 
+//Helper function for the submitanswer
 const clampScore = (value, fallback = 0) => {
   const num = Number(value);
   if (!Number.isFinite(num)) return fallback;
@@ -107,6 +108,7 @@ Rules:
 - Keep questions concise and realistic.
 `;
 
+//user submits answer -> detects filler words -> Ai evaluates grammar, relevance, structure -> Ai genrates followw-up questions -> calculates all scores locally ->  genrates next questions -> save everything to session
 const submitAnswer = async (req, res) => {
   try {
     const {

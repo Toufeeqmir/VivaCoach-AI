@@ -4,6 +4,7 @@ const Session = require("../../models/Session");
 // @desc    Get all transcripts for a session
 // @route   GET /api/speech/transcripts/:sessionId
 // @access  Private
+
 const getSessionTranscripts = async (req, res) => {
   try {
     const session = await Session.findOne({
