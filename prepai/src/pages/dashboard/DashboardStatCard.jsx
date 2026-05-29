@@ -1,12 +1,16 @@
-const DashboardStatCard = ({ label, value, sub, color }) => (
-  <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-    <div className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400">{label}</div>
-    <div className="mt-2 text-3xl font-black" style={{ color }}>
+const DashboardStatCard = ({ label, value, sub, color = "#f8f7f2" }) => (
+  <div className="min-h-[188px] rounded-[18px] border border-[#55554f] bg-[#30312e] p-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+    <div className="flex items-start justify-between gap-4">
+      <div className="max-w-[130px] text-xl font-semibold leading-tight text-[#aaa69e]">{label}</div>
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px] bg-[#242521] text-[#aaa69e]">
+        <span className="h-4 w-4 rounded-[3px] border border-current" />
+      </div>
+    </div>
+    <div className="mt-7 font-serif text-5xl leading-none" style={{ color }}>
       {value}
     </div>
-    {sub && <div className="mt-1 text-sm text-slate-500">{sub}</div>}
+    {sub && <div className="mt-5 text-lg font-semibold leading-tight text-[#aaa69e]">{sub}</div>}
   </div>
 );
 
 export default DashboardStatCard;
-

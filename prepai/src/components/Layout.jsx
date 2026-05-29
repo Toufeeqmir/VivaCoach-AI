@@ -2,12 +2,22 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+const IconBox = ({ active = false }) => (
+  <span
+    className={[
+      "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border text-[10px]",
+      active ? "border-zinc-200 bg-zinc-900 text-zinc-100" : "border-zinc-500 text-zinc-400",
+    ].join(" ")}
+  >
+    <span className="h-2 w-2 rounded-[2px] border border-current" />
+  </span>
+);
+
 const Layout = ({ children }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -15,161 +25,117 @@ const Layout = ({ children }) => {
   };
 
   const navLinks = [
-    { path: "/dashboard", label: "Dashboard" },
-    // { path: "/session", label: "Practice" },
+    { path: "/dashboard", label: "Dashboard", tag: "Home" },
     { path: "/interview", label: "Interview" },
     { path: "/report", label: "Report" },
+    { path: "/coach", label: "AI Coach" },
   ];
 
-  const navIcons = {
-    "/dashboard": "▦",
-    "/interview": "💬",
-    "/report": "📊",
-  };
+  const userInitial = user?.name?.charAt(0)?.toUpperCase() || "U";
+  const needsInset = location.pathname === "/session";
 
   const Sidebar = ({ onNavigate }) => (
-    <aside
-      className={[
-        "h-full border-r border-slate-200 bg-white",
-        collapsed ? "w-[84px]" : "w-[280px]",
-      ].join(" ")}
-    >
-      <div className="flex h-full flex-col">
-        {/* Brand */}
-        <div className="flex items-center justify-between px-5 py-5">
-          <Link to="/dashboard" className="flex items-center gap-3 no-underline" onClick={onNavigate}>
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--cyan)] shadow-[0_0_18px_#00d4ff55]">
-              <span className="font-['Syne',sans-serif] text-base font-extrabold text-[#050810]">P</span>
-            </div>
-            {!collapsed && (
-              <div className="leading-tight">
-                <div className="font-['Syne',sans-serif] text-lg font-extrabold text-slate-900">
-                  Prep<span className="text-[var(--cyan)]">AI</span>
-                </div>
-                <div className="text-xs text-slate-400">Overview</div>
-              </div>
-            )}
-          </Link>
+    <aside className="flex h-full w-[308px] shrink-0 flex-col border-r border-[#474744] bg-[#2f302d] text-zinc-100 lg:w-[348px]">
+      <div className="flex h-[104px] items-center gap-4 border-b border-[#474744] px-7">
+        <Link to="/dashboard" className="flex items-center gap-4 no-underline" onClick={onNavigate}>
+          <div className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-[#111110] font-serif text-lg font-bold text-white">
+            PA
+          </div>
+          <span className="text-2xl font-black text-white">PrepAI</span>
+        </Link>
+      </div>
+
+      <nav className="flex-1 px-4 py-5">
+        <div className="mb-4 text-sm font-black uppercase text-[#b4b0a8]">Menu</div>
+        <div className="space-y-2">
+          {navLinks.map((link) => {
+            const active = location.pathname === link.path;
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={onNavigate}
+                className={[
+                  "flex min-h-[52px] items-center gap-4 rounded-[14px] px-5 text-lg font-semibold no-underline transition",
+                  active ? "bg-[#232421] text-white" : "text-[#c9c6bf] hover:bg-[#272824] hover:text-white",
+                ].join(" ")}
+              >
+                <IconBox active={active} />
+                <span className="min-w-0 flex-1 truncate">{link.label}</span>
+                {active && link.tag && (
+                  <span className="rounded-full bg-[#10100f] px-4 py-1 text-sm font-semibold text-white">{link.tag}</span>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+
+      <div className="border-t border-[#474744] px-7 py-5">
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#090909] text-lg font-black text-white">
+            {userInitial}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-lg font-black text-white">{user?.name || "User"}</div>
+            <div className="truncate text-base text-[#aaa69e]">Free plan</div>
+          </div>
           <button
             type="button"
-            className="hidden rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-500 hover:bg-slate-50 md:inline-flex"
-            onClick={() => setCollapsed((v) => !v)}
-            aria-label="Toggle sidebar"
-            title="Toggle sidebar"
+            onClick={handleLogout}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-[8px] border border-[#55554f] bg-transparent text-zinc-300 transition hover:border-zinc-300 hover:text-white"
+            aria-label="Logout"
+            title="Logout"
           >
-            {collapsed ? "›" : "‹"}
+            <span className="h-3 w-3 rounded-[2px] border border-current" />
           </button>
-        </div>
-
-        {/* Nav */}
-        <nav className="px-3">
-          <div className="mb-3 px-2 text-[11px] font-bold uppercase tracking-widest text-slate-400">
-            {!collapsed ? "Menu" : " "}
-          </div>
-          <div className="space-y-1">
-            {navLinks.map((link) => {
-              const active = location.pathname === link.path;
-              return (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={onNavigate}
-                  className={[
-                    "flex items-center gap-3 rounded-2xl px-3 py-3 no-underline transition",
-                    active
-                      ? "bg-emerald-100 text-slate-900"
-                      : "text-slate-500 hover:bg-slate-100 hover:text-slate-900",
-                  ].join(" ")}
-                >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-lg">
-                    {navIcons[link.path] || "•"}
-                  </span>
-                  {!collapsed && <span className="text-sm font-semibold">{link.label}</span>}
-                </Link>
-              );
-            })}
-          </div>
-        </nav>
-
-        {/* Projects (static list for UI like screenshot) */}
-        {!collapsed && (
-          <div className="mt-6 px-5">
-            <div className="mb-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">Projects</div>
-            <div className="space-y-2">
-              {["Brand Logo Design", "User Research", "Marketing Sales"].map((p) => (
-                <div key={p} className="flex items-center gap-3 rounded-2xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100">
-                  <span className="text-slate-400">#</span>
-                  <span className="truncate">{p}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="mt-auto border-t border-slate-200 px-5 py-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-sm font-extrabold text-white">
-              {user?.name?.charAt(0)?.toUpperCase() || "U"}
-            </div>
-            {!collapsed && (
-              <div className="min-w-0 flex-1">
-                <div className="truncate text-sm font-semibold text-slate-900">{user?.name || "User"}</div>
-                <div className="truncate text-xs text-slate-400">{user?.email || "Signed in"}</div>
-              </div>
-            )}
-            <button
-              onClick={handleLogout}
-              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50"
-            >
-              Logout
-            </button>
-          </div>
         </div>
       </div>
     </aside>
   );
 
   return (
-    <div className="min-h-screen bg-slate-100">
-      {/* Mobile top bar */}
-      <div className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 md:hidden">
+    <div className="min-h-screen bg-[#10100f] text-zinc-100">
+      <div className="sticky top-0 z-40 flex h-[72px] items-center justify-between border-b border-[#474744] bg-[#2f302d] px-4 md:hidden">
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-[8px] border border-[#55554f] text-white"
+          aria-label="Open menu"
         >
-          ☰
+          <span className="h-4 w-4 border-y border-current" />
         </button>
-        <div className="font-['Syne',sans-serif] text-lg font-extrabold text-slate-900">
-          Prep<span className="text-[var(--cyan)]">AI</span>
-        </div>
-        <div className="h-9 w-9 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-sm font-extrabold">
-          {user?.name?.charAt(0)?.toUpperCase() || "U"}
+        <Link to="/dashboard" className="flex items-center gap-3 text-xl font-black text-white no-underline">
+          <span className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[#111110] font-serif text-sm">PA</span>
+          PrepAI
+        </Link>
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#090909] font-black text-white">
+          {userInitial}
         </div>
       </div>
 
       <div className="flex min-h-screen">
-        {/* Desktop sidebar */}
         <div className="hidden md:block">
           <Sidebar />
         </div>
 
-        {/* Mobile drawer */}
         {mobileOpen && (
           <div className="fixed inset-0 z-50 md:hidden">
-            <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
-            <div className="absolute inset-y-0 left-0 w-[300px]">
+            <button
+              type="button"
+              className="absolute inset-0 bg-black/60"
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close menu"
+            />
+            <div className="absolute inset-y-0 left-0 max-w-[86vw]">
               <Sidebar onNavigate={() => setMobileOpen(false)} />
             </div>
           </div>
         )}
 
-        {/* Main content */}
-        <div className="flex-1">
-          <main className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-10">
-            {children}
-          </main>
-        </div>
+        <main className="min-w-0 flex-1 bg-[#10100f]">
+          {needsInset ? <div className="p-6 md:p-10">{children}</div> : children}
+        </main>
       </div>
     </div>
   );
