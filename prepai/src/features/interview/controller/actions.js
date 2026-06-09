@@ -78,8 +78,9 @@ export const createInterviewActions = ({
       beginQuestionTimers(sid, liveQuestionSeconds);
       speak(normalized?.[0]?.question);
     } catch (error) {
+      if (error.response?.status === 401) return;
       console.error(error);
-      alert("Backend Error!");
+      alert(error.response?.data?.message || "Backend Error!");
     } finally {
       setLoading(false);
     }

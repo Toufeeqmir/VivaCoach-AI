@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Layout from "./components/Layout";
 import Landing from "./pages/landing";
@@ -12,6 +12,7 @@ import Coach from "./pages/Coach";
 import Interview from "./features/interview/Interview";
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
+  const location = useLocation();
   if (loading) return (
     <div style={{ minHeight: "100vh", background: "var(--bg-primary)", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ color: "var(--cyan)", fontFamily: "Syne", fontSize: 20, fontWeight: 700 }}>
@@ -19,7 +20,7 @@ const ProtectedRoute = ({ children }) => {
       </div>
     </div>
   );
-  return user ? children : <Navigate to="/login" />;
+  return user ? children : <Navigate to="/login" replace state={{ from: location }} />;
 };
 
 const AppRoutes = () => {

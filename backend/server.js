@@ -48,6 +48,17 @@ const server = app.listen(PORT, () => {
   console.log(`API available at http://localhost:${PORT}`);
 });
 
+server.on("error", (error) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(`Port ${PORT} is already in use. The backend may already be running.`);
+    console.error(`Use http://localhost:${PORT} or stop the existing process before starting another one.`);
+    process.exit(1);
+  }
+
+  console.error("Server failed to start:", error);
+  process.exit(1);
+});
+
 process.on("SIGINT", () => {
   console.log("Shutting down gracefully...");
   server.close(() => {
