@@ -43,8 +43,8 @@ const Report = () => {
   const report = buildReportData(interviews);
 
   return (
-    <div className="min-h-screen bg-[#050810] px-6 py-10 text-slate-200">
-      <div className="mx-auto max-w-6xl space-y-8">
+    <div className="app-page">
+      <div className="mx-auto max-w-6xl space-y-5">
         <HeroSection
           interviews={interviews}
           answers={report.answers}

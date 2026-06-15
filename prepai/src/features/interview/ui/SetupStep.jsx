@@ -1,12 +1,15 @@
 import AnalysisPanel from "../../AnalysisPanel";
 
 const SetupStep = ({ state, actions, refs }) => (
-  <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 items-start">
-    <div className="ui-card-soft rounded-[2rem] p-10 shadow-2xl">
-      <h2 className="text-2xl font-bold text-white mb-8 tracking-tight">Interview Configuration</h2>
-      <div className="space-y-6">
+  <div className="mx-auto grid max-w-6xl items-start gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+    <div className="ui-card-soft p-6">
+      <div className="mb-6">
+        <p className="eyebrow">Session setup</p>
+        <h2 className="mt-2 text-xl font-semibold text-white">Interview configuration</h2>
+      </div>
+      <div className="space-y-5">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <div className="ui-card p-5">
+          <div className="ui-card p-4">
             <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Mode</div>
             <div className="flex gap-2">
               <button
@@ -32,7 +35,7 @@ const SetupStep = ({ state, actions, refs }) => (
             </div>
           </div>
 
-          <div className="ui-card p-5">
+          <div className="ui-card p-4">
             <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Timer (per question)</div>
             <select
               className="ui-select rounded-2xl px-5 py-4"
@@ -82,7 +85,7 @@ const SetupStep = ({ state, actions, refs }) => (
         <button
           onClick={actions.startInterview}
           disabled={state.loading}
-          className="ui-btn-primary w-full py-5 rounded-2xl uppercase tracking-widest text-xs font-black"
+          className="ui-btn-primary w-full py-3 text-xs"
         >
           {state.loading ? "Generating Questions..." : "Begin Session"}
         </button>

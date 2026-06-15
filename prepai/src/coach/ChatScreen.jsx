@@ -31,10 +31,10 @@ const ChatScreen = ({
   const totalEmotionFrames = Object.values(emotionSummary || {}).reduce((a, b) => a + b, 0);
 
   return (
-    <div className="min-h-screen bg-[#050810] p-6 text-slate-200">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-8 bg-[#0d1117] border border-slate-800 rounded-3xl overflow-hidden">
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+    <div className="app-page">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 lg:grid-cols-12">
+        <div className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-card)] lg:col-span-8">
+          <div className="flex items-center justify-between border-b border-[var(--border)] p-4">
             <div>
               <p className="text-xs uppercase tracking-widest text-cyan-400 font-bold">Coach Session</p>
               <p className="text-xs text-slate-500">Duration: {formatTime(sessionDuration)}</p>
@@ -48,14 +48,14 @@ const ChatScreen = ({
             </button>
           </div>
 
-          <div className="h-[58vh] overflow-y-auto p-4 space-y-3">
+          <div className="h-[58vh] space-y-3 overflow-y-auto p-4">
             {messages.map((m, i) => (
               <div
                 key={`${m.role}-${i}`}
                 className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${
                   m.role === "user"
-                    ? "ml-auto bg-cyan-500/15 border border-cyan-500/25 text-cyan-100"
-                    : "bg-[#050810] border border-slate-800 text-slate-200"
+                    ? "ml-auto border border-[var(--blue-border)] bg-[var(--blue-tint)] text-[var(--text-primary)]"
+                    : "border border-[var(--border)] bg-[var(--bg-secondary)] text-slate-200"
                 }`}
               >
                 {m.content}
@@ -69,13 +69,13 @@ const ChatScreen = ({
             <div ref={chatEndRef} />
           </div>
 
-          <div className="p-4 border-t border-slate-800">
+          <div className="border-t border-[var(--border)] p-4">
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Type your reply..."
-              className="w-full rounded-2xl bg-[#050810] border border-slate-800 px-4 py-3 text-sm text-slate-200 min-h-[90px] focus:outline-none focus:border-cyan-500/40"
+              className="ui-input min-h-[90px] resize-none"
             />
             <div className="mt-3 flex items-center justify-between gap-3">
               <button
@@ -91,7 +91,7 @@ const ChatScreen = ({
               <button
                 onClick={sendMessage}
                 disabled={loading || !input.trim()}
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-cyan-500 text-black hover:bg-cyan-400 disabled:opacity-50"
+                className="ui-btn-primary text-xs"
               >
                 Send
               </button>
@@ -100,7 +100,7 @@ const ChatScreen = ({
         </div>
 
         <div className="lg:col-span-4 space-y-4">
-          <div className="bg-black rounded-3xl overflow-hidden border border-slate-800 relative aspect-square">
+          <div className="relative aspect-square overflow-hidden rounded-[10px] border border-[var(--border-strong)] bg-black">
             <video ref={videoRef} autoPlay muted playsInline className="w-full h-full object-cover scale-x-[-1]" />
             <canvas ref={canvasRef} className="hidden" />
             {currentEmotion && (
@@ -111,7 +111,7 @@ const ChatScreen = ({
               </div>
             )}
           </div>
-          <div className="bg-[#0d1117] border border-slate-800 rounded-2xl p-4">
+          <div className="section-card">
             <p className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-3">
               Facial Signal {cameraReady ? "• Active" : "• Off"}
             </p>

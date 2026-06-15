@@ -6,26 +6,26 @@ const SetupScreen = ({
   loading,
 }) => {
   return (
-    <div className="min-h-screen bg-[#050810] p-6 flex items-center justify-center">
-      <div className="w-full max-w-lg">
+    <div className="app-page flex items-center justify-center">
+      <div className="w-full max-w-xl">
         
         {/* 🔷 Header */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
-            <span className="text-2xl font-black text-black">AI</span>
+        <div className="mb-6">
+          <div className="brand-mark mb-4">
+            <span>AI</span>
           </div>
 
-          <h1 className="text-3xl font-black text-white">
+          <h1 className="text-2xl font-semibold text-white">
             Communication Coach
           </h1>
 
-          <p className="text-slate-500 text-sm mt-2">
+          <p className="mt-2 text-sm text-[var(--text-secondary)]">
             Your personal AI coach for interviews and English
           </p>
         </div>
 
         {/* 🔷 Main Card */}
-        <div className="bg-[#0d1117] border border-slate-800 rounded-3xl p-6">
+        <div className="ui-card p-6">
           
           <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">
             Choose Focus Area
@@ -73,7 +73,7 @@ const SetupScreen = ({
           <button
             onClick={startSession}
             disabled={loading}
-            className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-4 rounded-xl transition-all disabled:opacity-50"
+            className="ui-btn-primary w-full py-3 disabled:opacity-50"
           >
             {loading ? "Starting..." : "Start Coaching Session →"}
           </button>

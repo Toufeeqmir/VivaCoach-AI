@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children }) => {
   const location = useLocation();
   if (loading) return (
     <div style={{ minHeight: "100vh", background: "var(--bg-primary)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ color: "var(--cyan)", fontFamily: "Syne", fontSize: 20, fontWeight: 700 }}>
+      <div style={{ color: "var(--blue-light)", fontSize: 16, fontWeight: 600 }}>
         Prep<span style={{ color: "#fff" }}>AI</span>
       </div>
     </div>

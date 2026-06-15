@@ -6,7 +6,7 @@ const QuestionCard = ({ state, actions, live }) => {
 
   return (
     <>
-      <div className={`ui-card-soft p-10 rounded-[2.5rem] shadow-xl border-l-4 ${live ? "border-red-500" : "border-[var(--cyan)]"}`}>
+      <div className={`ui-card-soft border-l-[3px] p-6 ${live ? "border-l-red-500" : "border-l-[var(--blue)]"}`}>
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <span className={`ui-badge text-[10px] font-black uppercase tracking-widest ${live ? "bg-red-500/15 border border-red-500/25 text-red-200" : ""}`}>
             {live ? "Live Mock • " : ""}Question {state.currentIdx + 1} / {state.questions.length}
@@ -27,7 +27,7 @@ const QuestionCard = ({ state, actions, live }) => {
         </div>
         
 
-        <h2 className="text-2xl font-bold text-white leading-tight">{state.questions[state.currentIdx]?.question}</h2>
+        <h2 className="text-xl font-semibold leading-8 text-white">{state.questions[state.currentIdx]?.question}</h2>
         {currentFocus && (
           <p className="mt-4 text-sm text-slate-400">
             Focus: <span className="text-slate-200">{currentFocus}</span>
@@ -35,14 +35,14 @@ const QuestionCard = ({ state, actions, live }) => {
         )}
       </div>
 
-      <div className="ui-card-soft p-8 rounded-[2rem]">
+      <div className="ui-card-soft p-5">
         <textarea
-          className="ui-input min-h-[250px] resize-none rounded-2xl p-6 shadow-inner focus:border-[#00d4ff55]"
+          className="ui-input min-h-[220px] resize-none p-5"
           placeholder={live ? "Answer fast - Live Mock will auto-submit when time ends..." : "Type your response or use voice..."}
           value={state.answer}
           onChange={(e) => actions.setAnswer(e.target.value)}
         />
-        <div className="flex justify-between items-center mt-6">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <button
             onClick={state.isListening ? actions.stopSpeech : actions.startSpeech}
             className={`ui-btn px-8 py-3 rounded-xl font-bold text-xs uppercase transition-all ${state.isListening ? "bg-red-500 text-white animate-pulse" : "bg-slate-900 text-slate-400"}`}
@@ -84,7 +84,7 @@ const QuestionStep = ({ state, actions, refs, live = false }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto">
+    <div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 lg:grid-cols-12">
       <div className="lg:col-span-8 space-y-6">
         <QuestionCard state={state} actions={actions} live={live} />
       </div>

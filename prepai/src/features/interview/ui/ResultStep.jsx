@@ -6,9 +6,9 @@ const ResultStep = ({ state, actions, refs }) => {
     (state.answerResult?.adaptiveQuestions?.length || 0);
 
   return (
-    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
-      <div className="lg:col-span-8 space-y-6">
-        <div className="ui-card-soft rounded-[2.5rem] p-10 shadow-xl">
+    <div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 lg:grid-cols-12">
+      <div className="space-y-5 lg:col-span-8">
+        <div className="ui-card-soft border-l-[3px] border-l-[var(--blue)] p-6">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
             <span className="ui-badge text-[10px] font-black uppercase tracking-widest">Answer Result</span>
             <span className="text-xs text-slate-500">
@@ -16,16 +16,16 @@ const ResultStep = ({ state, actions, refs }) => {
             </span>
           </div>
 
-          <h2 className="text-xl font-bold text-white mb-3">
+          <h2 className="mb-3 text-lg font-semibold leading-7 text-white">
             {state.questions[state.currentIdx]?.question}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-            <div className="ui-card p-5">
+            <div className="ui-card p-4">
               <div className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Your Answer</div>
               <p className="text-sm leading-relaxed text-slate-200 whitespace-pre-wrap">{state.answer}</p>
             </div>
-            <div className="ui-card p-5">
+            <div className="ui-card p-4">
               <div className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">AI Feedback</div>
               {state.answerResult ? (
                 <div className="space-y-4">
@@ -66,7 +66,7 @@ const ResultStep = ({ state, actions, refs }) => {
             </div>
           </div>
 
-          <div className="mt-6 ui-card p-6">
+          <div className="ui-card mt-5 p-5">
             <div className="flex items-center justify-between gap-3 mb-3">
               <div className="text-xs font-bold uppercase tracking-widest text-slate-500">
                 Adaptive next questions <span className="text-slate-600 font-semibold">({insertedAdaptiveCount})</span>

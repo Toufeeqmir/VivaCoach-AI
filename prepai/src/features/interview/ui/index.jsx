@@ -5,7 +5,7 @@ import ResultStep from "./ResultStep";
 import FinalStep from "./FinalStep";
 
 const InterviewUI = ({ state, actions, refs }) => (
-  <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 p-6 font-sans">
+  <div className="app-page">
     <InterviewHeader state={state} actions={actions} />
 
     {state.step === "setup" && <SetupStep state={state} actions={actions} refs={refs} />}

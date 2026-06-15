@@ -26,24 +26,28 @@ const emotionBg = { happy: "bg-yellow-400", neutral: "bg-slate-400", sad: "bg-bl
  * @returns {JSX.Element}
  */
 const AnalysisPanel = ({ videoRef, canvasRef, cameraReady, currentEmotion, emotionSummary }) => (
-  <div className="space-y-4">
-    <div className="bg-black rounded-3xl overflow-hidden border border-slate-800 relative aspect-square">
+  <div className="space-y-3">
+    <div className="relative aspect-square overflow-hidden rounded-[10px] border border-[var(--border-strong)] bg-black">
       <video ref={videoRef} autoPlay muted playsInline className="w-full h-full object-cover scale-x-[-1]" />
       <canvas ref={canvasRef} className="hidden" />
       {currentEmotion && (
-        <div className="absolute top-4 left-4 bg-black/80 px-3 py-1.5 rounded-lg border border-white/10">
+        <div className="absolute left-3 top-3 rounded-[7px] border border-white/10 bg-black/80 px-3 py-1.5">
           <span className={`text-[10px] font-black uppercase ${emotionColors[currentEmotion]}`}>{currentEmotion}</span>
         </div>
       )}
     </div>
-    <div className="bg-[#0d1117] border border-slate-800 p-5 rounded-2xl">
+    <div className="section-card">
+      <div className="mb-4 flex items-center justify-between">
+        <p className="text-xs font-semibold text-white">Facial signals</p>
+        <span className="ui-badge px-2 py-1 text-[9px]">{cameraReady ? "Active" : "Standby"}</span>
+      </div>
       {Object.entries(emotionSummary).map(([em, count]) => {
         const total = Object.values(emotionSummary).reduce((a, b) => a + b, 0);
         const pct = total > 0 ? (count / total) * 100 : 0;
         return (
           <div key={em} className="mb-3">
-            <div className="flex justify-between text-[9px] font-bold text-slate-400 uppercase"><span>{em}</span><span>{Math.round(pct)}%</span></div>
-            <div className="h-1 bg-slate-800 rounded-full overflow-hidden"><div className={`h-full transition-all duration-500 ${emotionBg[em]}`} style={{ width: `${pct}%` }} /></div>
+            <div className="flex justify-between text-[9px] font-medium uppercase text-[var(--text-secondary)]"><span>{em}</span><span>{Math.round(pct)}%</span></div>
+            <div className="mt-1 h-1 overflow-hidden rounded-full bg-[var(--bg-raised)]"><div className={`h-full transition-all duration-500 ${emotionBg[em]}`} style={{ width: `${pct}%` }} /></div>
           </div>
         );
       })}

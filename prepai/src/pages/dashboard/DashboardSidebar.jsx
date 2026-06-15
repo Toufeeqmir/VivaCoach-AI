@@ -1,14 +1,10 @@
 const average = (values) => {
-  const clean = values.filter((value) => Number.isFinite(value));
-  if (!clean.length) return 0;
-  return Math.round(clean.reduce((sum, value) => sum + value, 0) / clean.length);
+  const clean = values.filter(Number.isFinite);
+  return clean.length ? Math.round(clean.reduce((sum, value) => sum + value, 0) / clean.length) : 0;
 };
 
-const clamp = (value) => Math.max(0, Math.min(100, value || 0));
-
 const buildReadiness = (interviews) => {
-  const latest = interviews?.[0];
-  const answers = latest?.answers || [];
+  const answers = interviews?.[0]?.answers || [];
   if (!answers.length) {
     return [
       { label: "Communication", value: 0 },
@@ -19,107 +15,73 @@ const buildReadiness = (interviews) => {
   }
 
   return [
-    {
-      label: "Communication",
-      value: average(answers.map((answer) => answer.deliveryScore || answer.confidenceScore || answer.overallScore)),
-    },
-    {
-      label: "Technical depth",
-      value: average(answers.map((answer) => average([answer.relevanceScore, answer.structureScore]))),
-    },
-    {
-      label: "Grammar & clarity",
-      value: average(answers.map((answer) => answer.grammarScore || answer.fillerScore)),
-    },
-    {
-      label: "Answer pacing",
-      value: average(answers.map((answer) => answer.speechScore || answer.wordsPerMinute)),
-    },
+    { label: "Communication", value: average(answers.map((answer) => answer.deliveryScore || answer.confidenceScore || answer.overallScore)) },
+    { label: "Technical depth", value: average(answers.map((answer) => average([answer.relevanceScore, answer.structureScore]))) },
+    { label: "Grammar & clarity", value: average(answers.map((answer) => answer.grammarScore || answer.fillerScore)) },
+    { label: "Answer pacing", value: average(answers.map((answer) => answer.speechScore || answer.wordsPerMinute)) },
   ];
 };
 
 const getWeekActivity = (interviews) => {
   const labels = ["M", "T", "W", "T", "F", "S", "S"];
-  const today = new Date();
-  const monday = new Date(today);
-  const dayIndex = (today.getDay() + 6) % 7;
-  monday.setDate(today.getDate() - dayIndex);
+  const monday = new Date();
+  monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
   monday.setHours(0, 0, 0, 0);
-
   const activeDays = new Set();
   (interviews || []).forEach((session) => {
     if (!session?.createdAt) return;
-    const sessionDate = new Date(session.createdAt);
-    const diff = Math.floor((sessionDate - monday) / 86400000);
+    const diff = Math.floor((new Date(session.createdAt) - monday) / 86400000);
     if (diff >= 0 && diff < 7) activeDays.add(diff);
   });
-
   return labels.map((label, index) => ({ label, active: activeDays.has(index) }));
 };
 
 const DashboardSidebar = ({ interviews }) => {
   const readiness = buildReadiness(interviews);
   const week = getWeekActivity(interviews);
-  const activeCount = week.filter((day) => day.active).length;
-  const hasSessions = (interviews || []).length > 0;
+  const hasSessions = Boolean(interviews?.length);
 
   return (
-    <aside className="space-y-7">
-      <section className="rounded-[18px] border border-[#55554f] bg-[#30312e] p-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-        <div className="mb-8 flex items-start justify-between gap-6">
-          <h2 className="max-w-[170px] text-2xl font-black leading-tight text-white">Skill readiness</h2>
-          <p className="max-w-[190px] text-lg font-semibold leading-tight text-[#aaa69e]">
-            {hasSessions ? "Based on latest session" : "Unlocks after first session"}
-          </p>
+    <aside className="space-y-4">
+      <section className="section-card">
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-sm font-semibold text-white">Skill readiness</h2>
+            <p className="mt-1 text-[11px] text-[var(--text-muted)]">{hasSessions ? "Based on your latest session" : "Unlocks after your first session"}</p>
+          </div>
+          <span className="ui-badge text-[9px]">Latest</span>
         </div>
-
-        <div className="space-y-6">
+        <div className="space-y-4">
           {readiness.map((skill) => (
             <div key={skill.label}>
-              <div className="mb-3 flex items-center justify-between gap-4">
-                <span className="text-xl font-semibold text-[#d5d2ca]">{skill.label}</span>
-                {hasSessions && <span className="text-sm font-black text-[#aaa69e]">{clamp(skill.value)}%</span>}
+              <div className="mb-2 flex items-center justify-between text-[11px]">
+                <span className="text-[var(--text-secondary)]">{skill.label}</span>
+                <span className="text-[var(--blue-light)]">{hasSessions ? Math.min(100, skill.value) : 0}%</span>
               </div>
-              <div className="h-2 rounded-full bg-[#232421]">
-                <div
-                  className="h-full rounded-full bg-[#d8d2c4] transition-all"
-                  style={{ width: `${hasSessions ? clamp(skill.value) : 0}%` }}
-                />
+              <div className="h-1 overflow-hidden rounded-full bg-[var(--bg-raised)]">
+                <div className="h-full rounded-full bg-[var(--blue)]" style={{ width: `${hasSessions ? Math.min(100, skill.value) : 0}%` }} />
               </div>
             </div>
           ))}
         </div>
-
-        <p className="mt-7 text-lg font-semibold leading-relaxed text-[#aaa69e]">
-          {hasSessions
-            ? "Keep practicing to raise each skill score across these four areas."
-            : "Complete a session to see how your skills score across these four areas."}
-        </p>
       </section>
 
-      <section className="rounded-[18px] border border-[#55554f] bg-[#30312e] p-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-        <div className="mb-7 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-2xl font-black text-white">Weekly streak</h2>
-          <p className="text-xl font-semibold text-[#aaa69e]">{activeCount} days this week</p>
+      <section className="section-card">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h2 className="text-sm font-semibold text-white">Weekly activity</h2>
+            <p className="mt-1 text-[11px] text-[var(--text-muted)]">Small sessions, consistent progress</p>
+          </div>
+          <span className="text-xs font-semibold text-[var(--blue-light)]">{week.filter((day) => day.active).length}/7</span>
         </div>
-
-        <div className="grid grid-cols-7 gap-3">
+        <div className="grid grid-cols-7 gap-2">
           {week.map((day, index) => (
             <div key={`${day.label}-${index}`} className="text-center">
-              <div className="mb-3 text-base font-semibold text-[#aaa69e]">{day.label}</div>
-              <div
-                className={[
-                  "mx-auto h-11 w-full max-w-[48px] rounded-[10px] border",
-                  day.active ? "border-[#d8fff3] bg-[#d8fff3]" : "border-[#55554f] bg-[#272824]",
-                ].join(" ")}
-              />
+              <p className="mb-2 text-[9px] text-[var(--text-muted)]">{day.label}</p>
+              <div className={day.active ? "h-8 rounded-[6px] border border-[var(--blue)] bg-[var(--blue)]" : "h-8 rounded-[6px] border border-[var(--border)] bg-[var(--bg-secondary)]"} />
             </div>
           ))}
         </div>
-
-        <p className="mt-7 text-lg font-semibold leading-relaxed text-[#aaa69e]">
-          Practice daily to build a streak. Consistent prep leads to consistent results.
-        </p>
       </section>
     </aside>
   );

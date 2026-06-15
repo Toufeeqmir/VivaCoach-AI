@@ -7,17 +7,17 @@ const SummaryScreen = ({
   setSessionDuration,
 }) => {
   return (
-    <div className="min-h-screen bg-[#050810] p-6">
+    <div className="app-page">
       <div className="max-w-2xl mx-auto">
         
         {/* 🔷 Overall Score Card */}
-        <div className="bg-[#0d1117] border border-cyan-500/20 rounded-3xl p-8 text-center mb-6">
+        <div className="mb-5 rounded-[10px] border border-[var(--blue-border)] border-l-[3px] border-l-[var(--blue)] bg-[var(--bg-card)] p-6 text-center">
           <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">
             Session Complete
           </p>
 
           <div
-            className={`text-7xl font-black mb-2 ${scoreColor(
+            className={`mb-2 text-6xl font-semibold ${scoreColor(
               summary.summary.overallScore
             )}`}
           >
@@ -32,7 +32,7 @@ const SummaryScreen = ({
         </div>
 
         {/* 🔷 Score Breakdown */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {[
             {
               label: "Communication",
@@ -52,7 +52,7 @@ const SummaryScreen = ({
           ].map(({ label, value, color }) => (
             <div
               key={label}
-              className="bg-[#0d1117] border border-slate-800 rounded-2xl p-4 text-center"
+              className="section-card text-center"
             >
               <div className={`text-3xl font-black ${color}`}>{value}</div>
               <div className="text-slate-500 text-xs mt-1">{label}</div>
@@ -173,7 +173,7 @@ const SummaryScreen = ({
               setSummary(null);
               setSessionDuration(0);
             }}
-            className="flex-1 bg-cyan-500 text-black font-bold py-4 rounded-2xl hover:bg-cyan-400 transition-all"
+            className="ui-btn-primary flex-1 py-3"
           >
             Practice Again
           </button>
@@ -181,7 +181,7 @@ const SummaryScreen = ({
           {/* Try Interview */}
           <button
             onClick={() => (window.location.href = "/interview")}
-            className="flex-1 bg-[#0d1117] border border-slate-800 text-white font-bold py-4 rounded-2xl hover:border-slate-600 transition-all"
+            className="ui-btn-ghost flex-1 py-3"
           >
             Try Interview
           </button>

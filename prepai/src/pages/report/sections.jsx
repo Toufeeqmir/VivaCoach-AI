@@ -64,11 +64,11 @@ const ChartTooltip = ({ active, payload, label }) => {
 };
 
 export const HeroSection = ({ interviews, answers, overallAverage, thisWeekAverage, scoreDelta }) => (
-  <section className="rounded-[2.5rem] border border-cyan-500/15 bg-[radial-gradient(circle_at_top_left,_rgba(6,182,212,0.16),_transparent_45%),_#0d1117] p-8 shadow-2xl">
+  <section className="rounded-[10px] border border-[var(--blue-border)] border-l-[3px] border-l-[var(--blue)] bg-[var(--bg-card)] p-6">
     <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
       <div className="max-w-2xl">
-        <p className="text-[10px] font-black uppercase tracking-[0.35em] text-cyan-300">Performance report</p>
-        <h1 className="mt-3 text-4xl font-black tracking-tight text-white">Progress that tells you what to practice next</h1>
+        <p className="eyebrow">Performance report</p>
+        <h1 className="mt-3 text-2xl font-semibold leading-tight text-white">Progress that tells you what to practice next</h1>
         <p className="mt-4 text-sm leading-relaxed text-slate-400">
           This report now highlights your strongest skills, weakest patterns, and the next drills most likely to improve your mock interview scores.
         </p>

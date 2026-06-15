@@ -1,16 +1,12 @@
-const DashboardStatCard = ({ label, value, sub, color = "#f8f7f2" }) => (
-  <div className="min-h-[188px] rounded-[18px] border border-[#55554f] bg-[#30312e] p-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-    <div className="flex items-start justify-between gap-4">
-      <div className="max-w-[130px] text-xl font-semibold leading-tight text-[#aaa69e]">{label}</div>
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px] bg-[#242521] text-[#aaa69e]">
-        <span className="h-4 w-4 rounded-[3px] border border-current" />
-      </div>
+const DashboardStatCard = ({ label, value, sub, index = 0 }) => (
+  <article className="section-card min-h-[132px]">
+    <span className="icon-tile h-8 w-8 text-[9px]">{String(index + 1).padStart(2, "0")}</span>
+    <p className="mt-4 text-2xl font-semibold text-white">{value}</p>
+    <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
+      <p className="text-xs text-[var(--text-secondary)]">{label}</p>
+      {sub && <p className="text-[10px] text-[var(--text-muted)]">{sub}</p>}
     </div>
-    <div className="mt-7 font-serif text-5xl leading-none" style={{ color }}>
-      {value}
-    </div>
-    {sub && <div className="mt-5 text-lg font-semibold leading-tight text-[#aaa69e]">{sub}</div>}
-  </div>
+  </article>
 );
 
 export default DashboardStatCard;

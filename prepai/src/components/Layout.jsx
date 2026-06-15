@@ -2,16 +2,13 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-const IconBox = ({ active = false }) => (
-  <span
-    className={[
-      "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border text-[10px]",
-      active ? "border-zinc-200 bg-zinc-900 text-zinc-100" : "border-zinc-500 text-zinc-400",
-    ].join(" ")}
-  >
-    <span className="h-2 w-2 rounded-[2px] border border-current" />
-  </span>
-);
+const navLinks = [
+  { path: "/dashboard", label: "Dashboard", short: "DB" },
+  { path: "/interview", label: "Interview", short: "IN" },
+  { path: "/report", label: "Report", short: "RP" },
+  { path: "/coach", label: "AI coach", short: "AI" },
+  { path: "/session", label: "Expression lab", short: "EX" },
+];
 
 const Layout = ({ children }) => {
   const { user, logout } = useAuth();
@@ -24,30 +21,23 @@ const Layout = ({ children }) => {
     navigate("/login");
   };
 
-  const navLinks = [
-    { path: "/dashboard", label: "Dashboard", tag: "Home" },
-    { path: "/interview", label: "Interview" },
-    { path: "/report", label: "Report" },
-    { path: "/coach", label: "AI Coach" },
-  ];
-
-  const userInitial = user?.name?.charAt(0)?.toUpperCase() || "U";
-  const needsInset = location.pathname === "/session";
+  const initials = (user?.name || "User")
+    .split(" ")
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
 
   const Sidebar = ({ onNavigate }) => (
-    <aside className="flex h-full w-[308px] shrink-0 flex-col border-r border-[#474744] bg-[#2f302d] text-zinc-100 lg:w-[348px]">
-      <div className="flex h-[104px] items-center gap-4 border-b border-[#474744] px-7">
-        <Link to="/dashboard" className="flex items-center gap-4 no-underline" onClick={onNavigate}>
-          <div className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-[#111110] font-serif text-lg font-bold text-white">
-            PA
-          </div>
-          <span className="text-2xl font-black text-white">PrepAI</span>
-        </Link>
-      </div>
+    <aside className="flex h-full w-[224px] flex-col border-r border-[var(--border)] bg-[var(--bg-secondary)]">
+      <Link to="/dashboard" onClick={onNavigate} className="flex h-[74px] items-center gap-3 border-b border-[var(--border)] px-5 no-underline">
+        <span className="brand-mark">AI</span>
+        <span className="text-[15px] font-semibold text-[var(--text-primary)]">PrepAI</span>
+      </Link>
 
-      <nav className="flex-1 px-4 py-5">
-        <div className="mb-4 text-sm font-black uppercase text-[#b4b0a8]">Menu</div>
-        <div className="space-y-2">
+      <nav className="flex-1 px-3 py-5">
+        <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)]">Menu</p>
+        <div className="space-y-1">
           {navLinks.map((link) => {
             const active = location.pathname === link.path;
             return (
@@ -56,86 +46,69 @@ const Layout = ({ children }) => {
                 to={link.path}
                 onClick={onNavigate}
                 className={[
-                  "flex min-h-[52px] items-center gap-4 rounded-[14px] px-5 text-lg font-semibold no-underline transition",
-                  active ? "bg-[#232421] text-white" : "text-[#c9c6bf] hover:bg-[#272824] hover:text-white",
+                  "flex min-h-11 items-center gap-3 rounded-[8px] border px-3 text-[13px] font-medium no-underline transition",
+                  active
+                    ? "border-[var(--blue-border)] bg-[var(--blue-tint)] text-[var(--blue-light)]"
+                    : "border-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-card)] hover:text-[var(--text-primary)]",
                 ].join(" ")}
               >
-                <IconBox active={active} />
-                <span className="min-w-0 flex-1 truncate">{link.label}</span>
-                {active && link.tag && (
-                  <span className="rounded-full bg-[#10100f] px-4 py-1 text-sm font-semibold text-white">{link.tag}</span>
-                )}
+                <span className={active ? "icon-tile h-7 w-7 rounded-[6px] text-[9px]" : "inline-flex h-7 w-7 items-center justify-center text-[9px] text-[var(--text-muted)]"}>
+                  {link.short}
+                </span>
+                {link.label}
               </Link>
             );
           })}
         </div>
       </nav>
 
-      <div className="border-t border-[#474744] px-7 py-5">
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#090909] text-lg font-black text-white">
-            {userInitial}
+      <div className="border-t border-[var(--border)] p-3">
+        <div className="mb-2 flex items-center gap-3 rounded-[8px] bg-[var(--bg-card)] p-3">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--blue-deep)] text-[11px] font-semibold text-[var(--blue-light)]">
+            {initials}
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-xs font-semibold text-[var(--text-primary)]">{user?.name || "User"}</p>
+            <p className="mt-0.5 text-[10px] text-[var(--text-muted)]">Free plan</p>
           </div>
-          <div className="min-w-0 flex-1">
-            <div className="truncate text-lg font-black text-white">{user?.name || "User"}</div>
-            <div className="truncate text-base text-[#aaa69e]">Free plan</div>
-          </div>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-[8px] border border-[#55554f] bg-transparent text-zinc-300 transition hover:border-zinc-300 hover:text-white"
-            aria-label="Logout"
-            title="Logout"
-          >
-            <span className="h-3 w-3 rounded-[2px] border border-current" />
-          </button>
         </div>
+        <button type="button" onClick={handleLogout} className="ui-btn-ghost w-full text-xs">
+          Sign out
+        </button>
       </div>
     </aside>
   );
 
   return (
-    <div className="min-h-screen bg-[#10100f] text-zinc-100">
-      <div className="sticky top-0 z-40 flex h-[72px] items-center justify-between border-b border-[#474744] bg-[#2f302d] px-4 md:hidden">
-        <button
-          type="button"
-          onClick={() => setMobileOpen(true)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-[8px] border border-[#55554f] text-white"
-          aria-label="Open menu"
-        >
-          <span className="h-4 w-4 border-y border-current" />
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+      <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[var(--border)] bg-[var(--bg-secondary)] px-4 md:hidden">
+        <button type="button" onClick={() => setMobileOpen(true)} className="ui-btn-ghost h-9 min-h-9 w-9 px-0" aria-label="Open menu">
+          <span className="text-lg">=</span>
         </button>
-        <Link to="/dashboard" className="flex items-center gap-3 text-xl font-black text-white no-underline">
-          <span className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[#111110] font-serif text-sm">PA</span>
-          PrepAI
+        <Link to="/dashboard" className="flex items-center gap-2 no-underline">
+          <span className="brand-mark h-8 w-8 rounded-[7px]">AI</span>
+          <span className="text-sm font-semibold text-white">PrepAI</span>
         </Link>
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#090909] font-black text-white">
-          {userInitial}
-        </div>
-      </div>
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--blue-deep)] text-[10px] font-semibold text-[var(--blue-light)]">
+          {initials}
+        </span>
+      </header>
 
       <div className="flex min-h-screen">
-        <div className="hidden md:block">
+        <div className="fixed inset-y-0 left-0 hidden md:block">
           <Sidebar />
         </div>
 
         {mobileOpen && (
           <div className="fixed inset-0 z-50 md:hidden">
-            <button
-              type="button"
-              className="absolute inset-0 bg-black/60"
-              onClick={() => setMobileOpen(false)}
-              aria-label="Close menu"
-            />
-            <div className="absolute inset-y-0 left-0 max-w-[86vw]">
+            <button type="button" className="absolute inset-0 bg-black/70" onClick={() => setMobileOpen(false)} aria-label="Close menu" />
+            <div className="absolute inset-y-0 left-0">
               <Sidebar onNavigate={() => setMobileOpen(false)} />
             </div>
           </div>
         )}
 
-        <main className="min-w-0 flex-1 bg-[#10100f]">
-          {needsInset ? <div className="p-6 md:p-10">{children}</div> : children}
-        </main>
+        <main className="min-w-0 flex-1 md:ml-[224px]">{children}</main>
       </div>
     </div>
   );
