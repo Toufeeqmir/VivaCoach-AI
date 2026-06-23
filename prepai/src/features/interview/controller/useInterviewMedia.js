@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import API from "../../../api";
 import { startSpeechRecognition } from "../speech";
 
-export const useInterviewMedia = ({ onEmotionDetected }) => {
+export const useInterviewMedia = ({ onEmotionDetected, onBodyLanguageDetected }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const intervalRef = useRef(null);
@@ -66,7 +66,10 @@ export const useInterviewMedia = ({ onEmotionDetected }) => {
       formData.append("image", blob, "frame.jpg");
       formData.append("sessionId", sessionId);
       const res = await API.post("/expression/analyze", formData);
-      const { expression, face_detected: faceDetected } = res.data;
+      const analysis = res.data || {};
+      const { expression, face_detected: faceDetected } = analysis;
+
+      onBodyLanguageDetected?.(analysis);
 
       if (faceDetected && expression) {
         onEmotionDetected(expression);

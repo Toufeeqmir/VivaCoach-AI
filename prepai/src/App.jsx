@@ -32,7 +32,10 @@ const AppRoutes = () => {
       <Route path="/register" element={user ? <Navigate to="/dashboard" /> : <Register />} />
       <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
       <Route path="/session" element={<ProtectedRoute><Layout><Session /></Layout></ProtectedRoute>} />
-      <Route path="/interview" element={<ProtectedRoute><Layout><Interview /></Layout></ProtectedRoute>} />
+      {/* <Route path="/interview" element={<ProtectedRoute><Layout><Interview /></Layout></ProtectedRoute>} /> */}
+
+      // After fix
+<Route path="/interview" element={<ProtectedRoute><Layout><Interview key={Date.now()} /></Layout></ProtectedRoute>} />
       <Route path="/report"    element={<ProtectedRoute><Layout><Report /></Layout></ProtectedRoute>} />
       <Route path="/coach"     element={<ProtectedRoute><Layout><Coach /></Layout></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" />} />

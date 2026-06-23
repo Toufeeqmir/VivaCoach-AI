@@ -3,6 +3,7 @@ import { speakText } from "../speech";
 import { createEmotionSummary } from "./helpers";
 import { createInterviewActions } from "./actions";
 import { useInterviewMedia } from "./useInterviewMedia";
+import { buildBodyLanguageSnapshot, createBodyLanguageSnapshot } from "../bodyLanguage";
 
 export function useInterviewController({ initialMode } = {}) {
   const followUpsInsertedAtRef = useRef(new Set());
@@ -23,6 +24,7 @@ export function useInterviewController({ initialMode } = {}) {
   const [answer, setAnswer] = useState("");
   const [emotionSummary, setEmotionSummary] = useState(createEmotionSummary);
   const [currentEmotion, setCurrentEmotion] = useState(null);
+  const [bodyLanguage, setBodyLanguage] = useState(createBodyLanguageSnapshot);
   const [answerResult, setAnswerResult] = useState(null);
   const [finalResult, setFinalResult] = useState(null);
 
@@ -40,6 +42,9 @@ export function useInterviewController({ initialMode } = {}) {
     onEmotionDetected: (expression) => {
       setCurrentEmotion(expression);
       setEmotionSummary((prev) => ({ ...prev, [expression]: (prev[expression] || 0) + 1 }));
+    },
+    onBodyLanguageDetected: (analysis) => {
+      setBodyLanguage((prev) => buildBodyLanguageSnapshot(analysis, prev));
     },
   });
 
@@ -86,6 +91,7 @@ export function useInterviewController({ initialMode } = {}) {
     setElapsed,
     setEmotionSummary,
     setCurrentEmotion,
+    setBodyLanguage,
     setFinalResult,
     setStep,
     setLiveRemaining,
@@ -119,6 +125,7 @@ export function useInterviewController({ initialMode } = {}) {
       isListening,
       emotionSummary,
       currentEmotion,
+      bodyLanguage,
       answerResult,
       finalResult,
       cameraReady,

@@ -1,6 +1,7 @@
 import API from "../../../api";
 import { buildAdaptiveQueue, createEmotionSummary, insertAdaptiveQuestions } from "./helpers";
 import { normalizeQuestions } from "../utils";
+import { createBodyLanguageSnapshot } from "../bodyLanguage";
 
 export const createInterviewActions = ({
   mode,
@@ -25,6 +26,7 @@ export const createInterviewActions = ({
   setElapsed,
   setEmotionSummary,
   setCurrentEmotion,
+  setBodyLanguage,
   setFinalResult,
   setStep,
   setLiveRemaining,
@@ -38,6 +40,7 @@ export const createInterviewActions = ({
     setElapsed(0);
     setEmotionSummary(createEmotionSummary());
     setCurrentEmotion(null);
+    setBodyLanguage(createBodyLanguageSnapshot());
   };
 
   const clearQuestionTimers = () => {

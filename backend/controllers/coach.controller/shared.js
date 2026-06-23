@@ -1,3 +1,10 @@
+// This is the utility/helper module for vivacoach . it exports reusable
+// function that handle: 
+  // AI text genereation(Groq)
+  // Speech quality analysis
+  // Language feedback scoring
+
+
 const Groq = require("groq-sdk");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
