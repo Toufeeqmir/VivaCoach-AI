@@ -7,7 +7,7 @@ const { generateToken } = require("./token");
 
 
 const register = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -15,7 +15,7 @@ const register = async (req, res) => {
       return res.status(400).json({ success: false, message: "Email already registered." });
     }
 
-    const user = await User.create({ name, email, password, role });
+    const user = await User.create({ name, email, password });
 
     res.status(201).json({
       success: true,
@@ -26,6 +26,7 @@ const register = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        isAdmin: user.isAdmin === true,
       },
     });
   } catch (error) {
@@ -60,6 +61,7 @@ const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        isAdmin: user.isAdmin === true,
         totalSessions: user.totalSessions,
       },
     });

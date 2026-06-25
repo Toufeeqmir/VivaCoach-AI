@@ -12,32 +12,11 @@ import {
 import SessionReviewSection from "./SessionReviewSection";
 import { buildReportData } from "./utils";
 
-const Report = () => {
-  const [interviews, setInterviews] = useState([]);
-  const [loading, setLoading] = useState(true);
+export const ReportView = ({ interviews, emptyState }) => {
   const [expanded, setExpanded] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await API.get("/interview/history");
-        setInterviews(res.data.sessions || []);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return <LoadingState />;
-  }
-
   if (!interviews.length) {
-    return <EmptyState />;
+    return emptyState || <EmptyState />;
   }
 
   const report = buildReportData(interviews);
@@ -87,6 +66,32 @@ const Report = () => {
       </div>
     </div>
   );
+};
+
+const Report = () => {
+  const [interviews, setInterviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await API.get("/interview/history");
+        setInterviews(res.data.sessions || []);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <LoadingState />;
+  }
+
+  return <ReportView interviews={interviews} />;
 };
 
 export default Report;

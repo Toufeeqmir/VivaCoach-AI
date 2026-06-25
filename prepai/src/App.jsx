@@ -9,8 +9,11 @@ import Session from "./pages/Session";
 // import Interview from "./pages/Interview";
 import Report from "./pages/Report";
 import Coach from "./pages/Coach";
+import TesterList from "./pages/Admin/TesterList";
+import TesterReport from "./pages/Admin/TesterReport";
 import Interview from "./features/interview/Interview";
-const ProtectedRoute = ({ children }) => {
+
+const ProtectedRoute = ({ children, requireAdmin = false }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
   if (loading) return (
@@ -20,7 +23,9 @@ const ProtectedRoute = ({ children }) => {
       </div>
     </div>
   );
-  return user ? children : <Navigate to="/login" replace state={{ from: location }} />;
+  if (!user) return <Navigate to="/login" replace state={{ from: location }} />;
+  if (requireAdmin && user.isAdmin !== true) return <Navigate to="/" replace />;
+  return children;
 };
 
 const AppRoutes = () => {
@@ -33,11 +38,11 @@ const AppRoutes = () => {
       <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
       <Route path="/session" element={<ProtectedRoute><Layout><Session /></Layout></ProtectedRoute>} />
       {/* <Route path="/interview" element={<ProtectedRoute><Layout><Interview /></Layout></ProtectedRoute>} /> */}
-
-      // After fix
-<Route path="/interview" element={<ProtectedRoute><Layout><Interview key={Date.now()} /></Layout></ProtectedRoute>} />
+      <Route path="/interview" element={<ProtectedRoute><Layout><Interview key={Date.now()} /></Layout></ProtectedRoute>} />
       <Route path="/report"    element={<ProtectedRoute><Layout><Report /></Layout></ProtectedRoute>} />
       <Route path="/coach"     element={<ProtectedRoute><Layout><Coach /></Layout></ProtectedRoute>} />
+      <Route path="/admin" element={<ProtectedRoute requireAdmin><Layout><TesterList /></Layout></ProtectedRoute>} />
+      <Route path="/admin/users/:userId" element={<ProtectedRoute requireAdmin><Layout><TesterReport /></Layout></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

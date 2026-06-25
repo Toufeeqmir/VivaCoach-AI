@@ -26,6 +26,10 @@ const UserSchema = new mongoose.Schema(
       enum: ["student", "professional", "admin"],
       default: "student",
     },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
     totalSessions: {
       type: Number,
       default: 0,

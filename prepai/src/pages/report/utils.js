@@ -39,6 +39,7 @@ const average = (items, picker) => {
   return Math.round(total / items.length);
 };
 
+//ClampMetric: to make a number safe non-negative rounded integer
 const clampMetric = (value) => {
   const safeValue = typeof value === "number" && Number.isFinite(value) ? value : 0;
   return Math.max(0, Math.round(safeValue));

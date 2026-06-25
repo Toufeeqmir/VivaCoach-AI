@@ -15,6 +15,9 @@ const Layout = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const visibleNavLinks = user?.isAdmin
+    ? [...navLinks, { path: "/admin", label: "Admin", short: "AD" }]
+    : navLinks;
 
   const handleLogout = () => {
     logout();
@@ -38,8 +41,8 @@ const Layout = ({ children }) => {
       <nav className="flex-1 px-3 py-5">
         <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)]">Menu</p>
         <div className="space-y-1">
-          {navLinks.map((link) => {
-            const active = location.pathname === link.path;
+          {visibleNavLinks.map((link) => {
+            const active = link.path === "/admin" ? location.pathname.startsWith("/admin") : location.pathname === link.path;
             return (
               <Link
                 key={link.path}

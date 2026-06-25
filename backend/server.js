@@ -32,6 +32,7 @@ app.use("/api/coach",     require("./routes/coach.routes"));
 // app.use("/api/multimodal", require("./routes/multimodal.routes"));
 
 app.use("/api/interview",  require("./routes/interview.routes"));
+app.use("/api/admin",      require("./routes/admin.routes"));
 app.get("/", (req, res) => {
   res.json({ message: "Facial Expression & Speech Correction API is running." });
 });

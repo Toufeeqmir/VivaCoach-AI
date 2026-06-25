@@ -10,6 +10,7 @@ const normalizeUser = (user) => {
     name: user.name,
     email: user.email,
     role: user.role,
+    isAdmin: user.isAdmin === true,
     totalSessions: user.totalSessions,
   };
 };
