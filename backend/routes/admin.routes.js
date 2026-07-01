@@ -5,6 +5,7 @@ const User = require("../models/User");
 const InterviewSession = require("../models/InterviewSession");
 const { protect, isAdmin } = require("../middleware/auth.middleware");
 
+//this line gives power to see the  other users to report 
 router.use(protect, isAdmin);
 
 router.get("/users", async (req, res) => {

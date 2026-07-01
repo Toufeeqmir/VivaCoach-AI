@@ -191,8 +191,12 @@ const submitAnswer = async (req, res) => {
     const relevanceScore = aiRelevanceScore;
     const structureScore = aiStructureScore;
     const fillerScore = calculateFillerScore(fillerWordCount, totalWords);
-    const confidenceScore = calculateConfidenceScore(normalizedEmotionSummary, grammarScore, fillerScore);
     const speechScore = calculateSpeechScore(wpm);
+    const confidenceScore = calculateConfidenceScore(normalizedEmotionSummary, grammarScore, fillerScore, {
+      speechScore,
+      structureScore,
+      relevanceScore,
+    });
     const speechSentimentScore = calculateSpeechSentimentScore(originalAnswer);
     const multimodalScore = calculateMultimodalScore(confidenceScore, speechSentimentScore);
     const deliveryScore = average(speechScore, fillerScore, confidenceScore);

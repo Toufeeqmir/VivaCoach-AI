@@ -9,10 +9,12 @@ connectDB();
 
 const app = express();
 
+//Reads the frontend URL from .env
 const allowedOrigins = process.env.CLIENT_URL
   ? process.env.CLIENT_URL.split(",").map((origin) => origin.trim())
   : true;
 
+  //Enables communication between React and Express (React-> backend)
 app.use(cors({
   origin: allowedOrigins,
   credentials: true,
@@ -60,6 +62,8 @@ server.on("error", (error) => {
   process.exit(1);
 });
 
+// To shut down the server safely when stop Node.js application
+ //SIGINT: is a signal sent to your Node.js application when ctrl + c  entered
 process.on("SIGINT", () => {
   console.log("Shutting down gracefully...");
   server.close(() => {

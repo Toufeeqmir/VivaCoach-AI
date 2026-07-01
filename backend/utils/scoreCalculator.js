@@ -57,18 +57,48 @@ const calculateFillerScore = (fillerWordCount, totalWords) => {
   return Math.round(score);
 };
 
+const clampPercent = (value, fallback = 0) => {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return fallback;
+  return Math.max(0, Math.min(100, Math.round(number)));
+};
+
 // FIX: when emotion data is missing, estimate from answer quality instead of hardcoding 50
-const calculateConfidenceScore = (emotionSummary, grammarScore = 70, fillerScore = 70) => {
-  const total = Object.values(emotionSummary).reduce((a, b) => a + b, 0);
+const calculateEmotionConfidenceScore = (emotionSummary = {}, grammarScore = 70, fillerScore = 70) => {
+  const total = Object.values(emotionSummary || {}).reduce((a, b) => a + Number(b || 0), 0);
 
   if (total === 0) {
     // HuggingFace emotion model unavailable — derive confidence from answer quality
     return Math.round((grammarScore * 0.5) + (fillerScore * 0.5));
   }
 
-  const positive = (emotionSummary.happy || 0) + (emotionSummary.neutral || 0);
+  const positive = Number(emotionSummary.happy || 0) + Number(emotionSummary.neutral || 0);
   const score = Math.round((positive / total) * 100);
   return Math.min(100, Math.max(0, score));
+};
+
+// Confidence combines visible presence, delivery, filler control, structure, and relevance.
+// Without full interview metrics, it falls back to the older emotion/answer-quality estimate.
+const calculateConfidenceScore = (emotionSummary, grammarScore = 70, fillerScore = 70, multimodalSignals = {}) => {
+  const emotionConfidenceScore = calculateEmotionConfidenceScore(emotionSummary, grammarScore, fillerScore);
+  const hasInterviewSignals = ["speechScore", "structureScore", "relevanceScore"].some((key) =>
+    Number.isFinite(Number(multimodalSignals?.[key]))
+  );
+
+  if (!hasInterviewSignals) return emotionConfidenceScore;
+
+  const speechScore = clampPercent(multimodalSignals.speechScore, emotionConfidenceScore);
+  const safeFillerScore = clampPercent(fillerScore, 70);
+  const structureScore = clampPercent(multimodalSignals.structureScore, grammarScore);
+  const relevanceScore = clampPercent(multimodalSignals.relevanceScore, structureScore);
+
+  return clampPercent(
+    emotionConfidenceScore * 0.25 +
+    speechScore            * 0.25 +
+    safeFillerScore        * 0.20 +
+    structureScore         * 0.15 +
+    relevanceScore         * 0.15
+  );
 };
 
 // FIX: minimum score is 30, not 0 — very slow speech still deserves partial credit
