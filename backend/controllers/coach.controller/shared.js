@@ -102,7 +102,7 @@ const buildFallbackCoachResponse = (message, feedback) => {
     issues.slice(0, 4).forEach((c) => issuesLines.push(`- ${c.issue} → ${c.fix}`));
   }
   if (filler.length > 0) issuesLines.push(`- Filler words used: ${filler.join(", ")}`);
-  const status = issuesLines.length === 0 ? "✅ Correct" : "❌ Needs improvement";
+  const status = issuesLines.length === 0 ? " Correct" : " Needs improvement";
   return `${status}\n\n${issuesLines.join("\n")}${improved ? `\n\nImproved: "${improved}"` : ""}`;
 };
 
