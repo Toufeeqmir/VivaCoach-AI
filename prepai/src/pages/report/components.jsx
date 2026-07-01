@@ -1,4 +1,5 @@
 import { scoreTone } from "./utils";
+import { Link } from "react-router-dom";
 
 export const SectionCard = ({ title, subtitle, children }) => (
   <section className="section-card">
@@ -71,12 +72,12 @@ export const EmptyState = () => (
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-500">
             Start a session, answer a few questions, and come back here to see score trends, weak areas, filler patterns, and practice suggestions.
           </p>
-          <a
-            href="/interview"
+          <Link
+            to="/interview"
             className="ui-btn-primary mt-8 no-underline"
           >
             Start interview
-          </a>
+          </Link>
         </div>
       </SectionCard>
     </div>

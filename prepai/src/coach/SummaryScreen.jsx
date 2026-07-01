@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 const SummaryScreen = ({
   summary,
   scoreColor,
@@ -6,6 +8,8 @@ const SummaryScreen = ({
   setSummary,
   setSessionDuration,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="app-page">
       <div className="max-w-2xl mx-auto">
@@ -180,7 +184,7 @@ const SummaryScreen = ({
 
           {/* Try Interview */}
           <button
-            onClick={() => (window.location.href = "/interview")}
+            onClick={() => navigate("/interview")}
             className="ui-btn-ghost flex-1 py-3"
           >
             Try Interview
