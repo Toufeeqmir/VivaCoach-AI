@@ -126,6 +126,86 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
+.mobile-dashboard-enter {
+  animation: mobile-dashboard-fade 280ms ease-out both;
+}
+
+.mobile-sidebar-overlay {
+  animation: mobile-overlay-fade 220ms ease-out both;
+}
+
+.mobile-sidebar-panel {
+  animation: mobile-sidebar-slide 260ms ease-out both;
+}
+
+.mobile-search-panel {
+  animation: mobile-search-reveal 220ms ease-out both;
+}
+
+.mobile-progress-fill {
+  transform-origin: left center;
+  animation: mobile-progress-fill 720ms ease-out both;
+}
+
+@keyframes mobile-dashboard-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobile-overlay-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes mobile-sidebar-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes mobile-search-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobile-progress-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-dashboard-enter,
+  .mobile-sidebar-overlay,
+  .mobile-sidebar-panel,
+  .mobile-search-panel,
+  .mobile-progress-fill {
+    animation: none;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

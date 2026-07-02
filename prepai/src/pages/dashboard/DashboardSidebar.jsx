@@ -1,9 +1,9 @@
-const average = (values) => {
+export const average = (values) => {
   const clean = values.filter(Number.isFinite);
   return clean.length ? Math.round(clean.reduce((sum, value) => sum + value, 0) / clean.length) : 0;
 };
 
-const buildReadiness = (interviews) => {
+export const buildReadiness = (interviews) => {
   const answers = interviews?.[0]?.answers || [];
   if (!answers.length) {
     return [
@@ -22,7 +22,7 @@ const buildReadiness = (interviews) => {
   ];
 };
 
-const getWeekActivity = (interviews) => {
+export const getWeekActivity = (interviews) => {
   const labels = ["M", "T", "W", "T", "F", "S", "S"];
   const monday = new Date();
   monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));

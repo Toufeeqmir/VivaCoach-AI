@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 
-const actions = [
-  { title: "Live mock interview", desc: "Timed questions in a realistic interview flow", to: "/interview?mode=live", code: "LM" },
-  { title: "Practice interview", desc: "Answer without time pressure and review feedback", to: "/interview?mode=practice", code: "PI" },
-  { title: "AI coach", desc: "Work through communication and confidence drills", to: "/coach", code: "AI" },
-  { title: "Expression lab", desc: "Practice non-verbal presence with live signals", to: "/session", code: "EX" },
+export const dashboardActions = [
+  { title: "Live mock interview", desc: "Timed questions in a realistic interview flow", mobileDesc: "Timed interview in realistic conditions", to: "/interview?mode=live", code: "LM" },
+  { title: "Practice interview", desc: "Answer without time pressure and review feedback", mobileDesc: "Practice without time pressure", to: "/interview?mode=practice", code: "PI" },
+  { title: "AI coach", desc: "Work through communication and confidence drills", mobileDesc: "Communication and confidence coaching", to: "/coach", code: "AI" },
+  { title: "Expression lab", desc: "Practice non-verbal presence with live signals", mobileDesc: "Practice body language with live feedback", to: "/session", code: "EX" },
 ];
 
 const DashboardTasks = () => (
@@ -17,7 +17,7 @@ const DashboardTasks = () => (
       <span className="ui-badge text-sm leading-5 tracking-[0.01em]">Practice</span>
     </div>
     <div className="divide-y divide-[var(--border)] border-y border-[var(--border)]">
-      {actions.map((action) => (
+      {dashboardActions.map((action) => (
         <Link key={action.title} to={action.to} className="group flex items-center gap-3 py-4 no-underline">
           <span className="icon-tile shrink-0 text-sm leading-none tracking-[0.01em]">{action.code}</span>
           <div className="min-w-0 flex-1">
