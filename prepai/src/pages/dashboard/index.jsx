@@ -72,7 +72,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] antialiased">
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <DashboardMobile
           firstName={firstName}
           formatToday={formatToday}
@@ -86,7 +86,7 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
         <DashboardHeader
           loading={loading}
           query={query}

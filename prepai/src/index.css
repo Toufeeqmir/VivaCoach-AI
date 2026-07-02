@@ -130,14 +130,6 @@ select:focus-visible {
   animation: mobile-dashboard-fade 280ms ease-out both;
 }
 
-.mobile-sidebar-overlay {
-  animation: mobile-overlay-fade 220ms ease-out both;
-}
-
-.mobile-sidebar-panel {
-  animation: mobile-sidebar-slide 260ms ease-out both;
-}
-
 .mobile-search-panel {
   animation: mobile-search-reveal 220ms ease-out both;
 }
@@ -155,24 +147,6 @@ select:focus-visible {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes mobile-overlay-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes mobile-sidebar-slide {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
   }
 }
 
@@ -198,8 +172,6 @@ select:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .mobile-dashboard-enter,
-  .mobile-sidebar-overlay,
-  .mobile-sidebar-panel,
   .mobile-search-panel,
   .mobile-progress-fill {
     animation: none;

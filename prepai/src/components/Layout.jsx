@@ -69,7 +69,7 @@ const Layout = ({ children }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const visibleNavLinks = user?.isAdmin
     ? [...navLinks, { path: "/admin", label: "Admin", short: "AD" }]
@@ -91,7 +91,7 @@ const Layout = ({ children }) => {
     <aside
       className={[
         "flex h-full flex-col border-r border-[var(--border)] bg-[var(--bg-secondary)]",
-        mobile ? "w-[286px] rounded-r-[20px] shadow-[24px_0_60px_rgba(0,0,0,0.35)]" : "w-[224px]",
+        mobile ? "w-[286px] max-w-[calc(100vw-48px)] rounded-r-[20px] shadow-[24px_0_60px_rgba(0,0,0,0.35)]" : "w-[224px]",
       ].join(" ")}
     >
       <Link to="/dashboard" onClick={onNavigate} className="flex h-[74px] items-center gap-3 border-b border-[var(--border)] px-5 no-underline">
@@ -145,13 +145,14 @@ const Layout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg-primary)] md:hidden">
-        <div className="flex h-[72px] items-center gap-2 px-4">
+      <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg-primary)] lg:hidden">
+        <div className="flex h-[72px] items-center gap-2 px-3 min-[390px]:px-4">
           <button
             type="button"
-            onClick={() => setMobileOpen(true)}
+            onClick={() => setSidebarOpen((open) => !open)}
             className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border border-[var(--border-strong)] bg-[var(--bg-secondary)] text-[var(--text-primary)] transition duration-200 active:scale-95"
             aria-label="Open menu"
+            aria-expanded={sidebarOpen}
           >
             <MenuIcon />
           </button>
@@ -170,7 +171,7 @@ const Layout = ({ children }) => {
           </button>
           <Link
             to="/interview"
-            className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-[14px] border border-[var(--blue)] bg-[var(--blue)] px-4 text-base font-semibold leading-6 text-white no-underline transition duration-200 active:scale-95"
+            className="inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-[14px] border border-[var(--blue)] bg-[var(--blue)] px-3 text-base font-semibold leading-6 text-white no-underline transition duration-200 active:scale-95 min-[390px]:px-4"
           >
             New Session
           </Link>
@@ -187,23 +188,34 @@ const Layout = ({ children }) => {
       </header>
 
       <div className="flex min-h-screen">
-        <div className="fixed inset-y-0 left-0 hidden md:block">
+        <div className="fixed inset-y-0 left-0 hidden lg:block">
           <Sidebar />
         </div>
 
-        {mobileOpen && (
-          <div className="fixed inset-0 z-50 md:hidden">
-            <button type="button" className="mobile-sidebar-overlay absolute inset-0 bg-black/70" onClick={() => setMobileOpen(false)} aria-label="Close menu" />
-            <div className="mobile-sidebar-panel absolute inset-y-0 left-0">
-              <Sidebar mobile onNavigate={() => setMobileOpen(false)} />
-            </div>
+        <div className={["fixed inset-0 z-50 lg:hidden", sidebarOpen ? "pointer-events-auto" : "pointer-events-none"].join(" ")}>
+          <button
+            type="button"
+            className={[
+              "absolute inset-0 bg-black/70 transition-opacity duration-300 ease-in-out",
+              sidebarOpen ? "opacity-100" : "opacity-0",
+            ].join(" ")}
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close menu"
+          />
+          <div
+            className={[
+              "absolute inset-y-0 left-0 transition-all duration-300 ease-in-out",
+              sidebarOpen ? "translate-x-0" : "-translate-x-full",
+            ].join(" ")}
+          >
+            <Sidebar mobile onNavigate={() => setSidebarOpen(false)} />
           </div>
-        )}
+        </div>
 
-        <main className="min-w-0 flex-1 md:ml-[224px]">{children}</main>
+        <main className="min-w-0 flex-1 overflow-x-hidden lg:ml-[224px]">{children}</main>
       </div>
 
-      <nav className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-5 rounded-[22px] border border-[var(--border-strong)] bg-[var(--bg-secondary)] p-1 shadow-[0_18px_45px_rgba(0,0,0,0.42)] md:hidden" aria-label="Primary mobile navigation">
+      <nav className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-5 rounded-[22px] border border-[var(--border-strong)] bg-[var(--bg-secondary)] p-1 shadow-[0_18px_45px_rgba(0,0,0,0.42)] lg:hidden" aria-label="Primary mobile navigation">
         {bottomNavLinks.map(({ path, label, Icon }) => {
           const active = path === "/report" ? location.pathname.startsWith("/report") : location.pathname === path;
           return (
@@ -225,7 +237,7 @@ const Layout = ({ children }) => {
         })}
         <button
           type="button"
-          onClick={() => setMobileOpen(true)}
+          onClick={() => setSidebarOpen(true)}
           className="flex min-h-[58px] min-w-0 flex-col items-center justify-center gap-1 rounded-[18px] px-1 text-[11px] font-medium leading-none text-[var(--text-secondary)] transition duration-200 hover:bg-[var(--bg-card)] hover:text-[var(--text-primary)] active:scale-95"
         >
           <UserIcon />

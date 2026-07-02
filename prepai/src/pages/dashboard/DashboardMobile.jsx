@@ -70,7 +70,7 @@ const MobileStatCard = ({ stat, index }) => {
 };
 
 const MobileQuickActions = () => (
-  <section className="mt-5">
+  <section>
     <MobileSectionHeading title="Quick actions" eyebrow="Choose a focused practice mode" />
     <div className="space-y-4">
       {dashboardActions.map((action) => (
@@ -98,7 +98,7 @@ const MobileQuickActions = () => (
 );
 
 const MobileSkillReadiness = ({ readiness, hasSessions }) => (
-  <section className="mt-5 rounded-[20px] border border-[var(--border)] bg-[var(--bg-card)] p-5 shadow-[0_18px_40px_rgba(0,0,0,0.22)]">
+  <section className="rounded-[20px] border border-[var(--border)] bg-[var(--bg-card)] p-5 shadow-[0_18px_40px_rgba(0,0,0,0.22)]">
     <MobileSectionHeading
       title="Skill readiness"
       eyebrow={hasSessions ? "Based on your latest session" : "Unlocks after your first session"}
@@ -138,7 +138,7 @@ const MobileWeeklyActivity = ({ week, totalMinutes, sessionsCompleted }) => {
   const currentStreak = getCurrentStreak(week);
 
   return (
-    <section className="mt-5 rounded-[20px] border border-[var(--border)] bg-[var(--bg-card)] p-5 shadow-[0_18px_40px_rgba(0,0,0,0.22)]">
+    <section className="rounded-[20px] border border-[var(--border)] bg-[var(--bg-card)] p-5 shadow-[0_18px_40px_rgba(0,0,0,0.22)]">
       <div className="mb-5 flex items-start justify-between gap-4">
         <MobileSectionHeading title="Weekly activity" eyebrow="Momentum across this week" />
         <span className="rounded-full border border-[var(--blue-border)] bg-[var(--blue-tint)] px-3 py-1 text-sm font-semibold leading-5 text-[var(--blue-light)] [font-variant-numeric:tabular-nums]">
@@ -182,7 +182,7 @@ const DashboardMobile = ({
   sessionsCompleted,
   hasSessions,
 }) => (
-  <div className="mobile-dashboard-enter px-4 pb-28 pt-4 min-[390px]:px-5">
+  <div className="mobile-dashboard-enter max-w-full overflow-x-hidden px-4 pb-28 pt-4 md:px-6">
     <section className="relative overflow-hidden rounded-[20px] border border-[var(--border-strong)] bg-[var(--bg-card)] p-5 shadow-[0_20px_48px_rgba(0,0,0,0.28)]">
       <div className="pointer-events-none absolute right-[-34px] top-6 h-32 w-36 rotate-[-14deg] rounded-[24px] border border-[var(--blue-border)] bg-[linear-gradient(135deg,var(--blue-tint),transparent)] opacity-90" />
       <div className="pointer-events-none absolute right-6 top-14 h-20 w-24 rotate-[-14deg] rounded-[18px] border border-[var(--border-strong)] bg-[var(--bg-raised)]/60" />
@@ -198,7 +198,7 @@ const DashboardMobile = ({
         <p className="mt-4 max-w-[310px] text-[17px] font-normal leading-[1.6] tracking-[0] text-[var(--text-secondary)]">
           Your prep workspace is ready. Start another round or review your progress.
         </p>
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className="mt-6 flex flex-col gap-3 min-[380px]:flex-row min-[380px]:flex-wrap">
           <Link to="/interview?mode=live" className="ui-btn-primary min-h-11 rounded-[14px] px-5 text-base font-semibold leading-6 no-underline">
             Start Session
           </Link>
@@ -215,9 +215,13 @@ const DashboardMobile = ({
       ))}
     </section>
 
-    <MobileQuickActions />
-    <MobileSkillReadiness readiness={readiness} hasSessions={hasSessions} />
-    <MobileWeeklyActivity week={week} totalMinutes={totalMinutes} sessionsCompleted={sessionsCompleted} />
+    <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <MobileQuickActions />
+      <div className="space-y-5">
+        <MobileSkillReadiness readiness={readiness} hasSessions={hasSessions} />
+        <MobileWeeklyActivity week={week} totalMinutes={totalMinutes} sessionsCompleted={sessionsCompleted} />
+      </div>
+    </div>
   </div>
 );
 
