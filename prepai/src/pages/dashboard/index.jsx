@@ -66,7 +66,7 @@ const Dashboard = () => {
   const hasActivity = stats.some((item) => Number.parseInt(item.value, 10) > 0);
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)]">
+    <div className="min-h-screen bg-[var(--bg-primary)] antialiased">
       <DashboardHeader
         loading={loading}
         query={query}
@@ -76,13 +76,13 @@ const Dashboard = () => {
 
       <div className="mx-auto max-w-[1400px] px-5 py-6 lg:px-8 lg:py-8">
         <section className="mb-6 rounded-[10px] border border-[var(--border-strong)] border-l-[3px] border-l-[var(--blue)] bg-[var(--bg-card)] p-6">
-          <p className="mb-2 text-xs text-[var(--text-secondary)]">
+          <p className="mb-2 text-sm leading-5 tracking-[0.01em] text-[var(--text-secondary)]">
             {formatToday()} - {getGreeting()}
           </p>
-          <h2 className="text-2xl font-semibold leading-tight text-white">
+          <h2 className="max-w-[780px] text-[34px] font-bold leading-[1.1] tracking-[0] text-white sm:text-[40px]">
             Ready to practice, {firstName}?
           </h2>
-          <p className="mt-3 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]">
+          <p className="mt-4 max-w-[620px] text-base font-normal leading-7 tracking-[0] text-[var(--text-secondary)]">
             {hasActivity
               ? "Your prep workspace is ready. Start another round or review the progress you have already built."
               : "No sessions yet. Every expert was once a beginner - start your first mock interview today."}
@@ -91,13 +91,13 @@ const Dashboard = () => {
           <div className="mt-5 flex flex-wrap gap-2">
             <Link
               to="/interview?mode=live"
-              className="ui-btn-primary text-xs no-underline"
+              className="ui-btn-primary text-base font-semibold leading-6 no-underline"
             >
               Start session
             </Link>
             <Link
               to="/report"
-              className="ui-btn-ghost text-xs no-underline"
+              className="ui-btn-ghost text-base font-semibold leading-6 no-underline"
             >
               View report
             </Link>

@@ -46,17 +46,17 @@ const DashboardSidebar = ({ interviews }) => {
       <section className="section-card">
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-sm font-semibold text-white">Skill readiness</h2>
-            <p className="mt-1 text-[11px] text-[var(--text-muted)]">{hasSessions ? "Based on your latest session" : "Unlocks after your first session"}</p>
+            <h2 className="text-2xl font-semibold leading-[1.25] tracking-[0] text-white">Skill readiness</h2>
+            <p className="mt-1.5 text-[15px] font-normal leading-6 tracking-[0] text-[var(--text-secondary)]">{hasSessions ? "Based on your latest session" : "Unlocks after your first session"}</p>
           </div>
-          <span className="ui-badge text-[9px]">Latest</span>
+          <span className="ui-badge text-sm leading-5 tracking-[0.01em]">Latest</span>
         </div>
         <div className="space-y-4">
           {readiness.map((skill) => (
             <div key={skill.label}>
-              <div className="mb-2 flex items-center justify-between text-[11px]">
+              <div className="mb-2 flex items-center justify-between text-sm font-normal leading-5 tracking-[0]">
                 <span className="text-[var(--text-secondary)]">{skill.label}</span>
-                <span className="text-[var(--blue-light)]">{hasSessions ? Math.min(100, skill.value) : 0}%</span>
+                <span className="font-medium text-[var(--blue-light)] [font-variant-numeric:tabular-nums]">{hasSessions ? Math.min(100, skill.value) : 0}%</span>
               </div>
               <div className="h-1 overflow-hidden rounded-full bg-[var(--bg-raised)]">
                 <div className="h-full rounded-full bg-[var(--blue)]" style={{ width: `${hasSessions ? Math.min(100, skill.value) : 0}%` }} />
@@ -69,15 +69,15 @@ const DashboardSidebar = ({ interviews }) => {
       <section className="section-card">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-white">Weekly activity</h2>
-            <p className="mt-1 text-[11px] text-[var(--text-muted)]">Small sessions, consistent progress</p>
+            <h2 className="text-2xl font-semibold leading-[1.25] tracking-[0] text-white">Weekly activity</h2>
+            <p className="mt-1.5 text-[15px] font-normal leading-6 tracking-[0] text-[var(--text-secondary)]">Small sessions, consistent progress</p>
           </div>
-          <span className="text-xs font-semibold text-[var(--blue-light)]">{week.filter((day) => day.active).length}/7</span>
+          <span className="text-base font-semibold leading-6 tracking-[0] text-[var(--blue-light)] [font-variant-numeric:tabular-nums]">{week.filter((day) => day.active).length}/7</span>
         </div>
         <div className="grid grid-cols-7 gap-2">
           {week.map((day, index) => (
             <div key={`${day.label}-${index}`} className="text-center">
-              <p className="mb-2 text-[9px] text-[var(--text-muted)]">{day.label}</p>
+              <p className="mb-2 text-sm font-normal leading-5 tracking-[0.01em] text-[var(--text-secondary)]">{day.label}</p>
               <div className={day.active ? "h-8 rounded-[6px] border border-[var(--blue)] bg-[var(--blue)]" : "h-8 rounded-[6px] border border-[var(--border)] bg-[var(--bg-secondary)]"} />
             </div>
           ))}
