@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import API from "../../api";
-import { EmptyState, LoadingState } from "./components";
+import { EmptyState, LoadingState, SectionCard } from "./components";
 import {
+  AiSummarySection,
   ComparisonSection,
   HeroSection,
-  MomentumSection,
-  PracticeSection,
-  PresenceSection,
-  SkillSummarySection,
-} from "./sections";
-import SessionReviewSection from "./SessionReviewSection";
-import { buildReportData } from "./utils";
+  StrengthsWeaknessesSection,
+} from "./AnalyticsSections";
+import SessionTimelineSection from "./SessionTimelineSection";
+import { buildReportData } from "./analytics";
 
 export const ReportView = ({ interviews, emptyState }) => {
   const [expanded, setExpanded] = useState(null);
@@ -23,46 +21,12 @@ export const ReportView = ({ interviews, emptyState }) => {
 
   return (
     <div className="app-page">
-      <div className="mx-auto max-w-6xl space-y-5">
-        <HeroSection
-          interviews={interviews}
-          answers={report.answers}
-          overallAverage={report.overallAverage}
-          thisWeekAverage={report.thisWeekAverage}
-          scoreDelta={report.scoreDelta}
-        />
-
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <SkillSummarySection
-            skillSummary={report.skillSummary}
-            strongestSkill={report.strongestSkill}
-            weakestSkill={report.weakestSkill}
-          />
-          <PracticeSection
-            shownRecommendations={report.shownRecommendations}
-            topFillers={report.topFillers}
-            topFocuses={report.topFocuses}
-          />
-        </div>
-
-        <ComparisonSection comparisonSummary={report.comparisonSummary} scoreTrend={report.scoreTrend} />
-
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <MomentumSection
-            latestSession={report.latestSession}
-            bestSession={report.bestSession}
-            thisWeekAverage={report.thisWeekAverage}
-            lastWeekAverage={report.lastWeekAverage}
-            scoreDelta={report.scoreDelta}
-          />
-          <PresenceSection
-            emotionTotals={report.emotionTotals}
-            totalEmotionSignals={report.totalEmotionSignals}
-            dominantEmotion={report.dominantEmotion}
-          />
-        </div>
-
-        <SessionReviewSection interviews={interviews} expanded={expanded} setExpanded={setExpanded} />
+      <div className="mx-auto max-w-7xl space-y-5">
+        <HeroSection report={report} />
+        <AiSummarySection report={report} />
+        <ComparisonSection report={report} />
+        <StrengthsWeaknessesSection report={report} />
+        <SessionTimelineSection sessions={report.sessions} expanded={expanded} setExpanded={setExpanded} />
       </div>
     </div>
   );
@@ -71,6 +35,7 @@ export const ReportView = ({ interviews, emptyState }) => {
 const Report = () => {
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,6 +44,7 @@ const Report = () => {
         setInterviews(res.data.sessions || []);
       } catch (error) {
         console.error(error);
+        setError(error.response?.data?.message || "Unable to load your progress analytics.");
       } finally {
         setLoading(false);
       }
@@ -89,6 +55,20 @@ const Report = () => {
 
   if (loading) {
     return <LoadingState />;
+  }
+
+  if (error) {
+    return (
+      <div className="app-page">
+        <div className="mx-auto max-w-6xl">
+          <SectionCard title="Report" subtitle="Your progress dashboard could not be loaded.">
+            <div className="rounded-[8px] border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+              {error}
+            </div>
+          </SectionCard>
+        </div>
+      </div>
+    );
   }
 
   return <ReportView interviews={interviews} />;
