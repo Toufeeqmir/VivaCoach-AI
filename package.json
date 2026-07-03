@@ -1,0 +1,14 @@
+{
+  "name": "vivacoach-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Root deploy entrypoint for the VivaCoach-AI monorepo.",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "postinstall": "npm install --prefix backend",
+    "build": "npm install --prefix prepai && npm run build --prefix prepai",
+    "start": "npm start --prefix backend"
+  }
+}
