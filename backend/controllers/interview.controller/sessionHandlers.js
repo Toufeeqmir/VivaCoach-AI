@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 const InterviewSession = require("../../models/InterviewSession");
+const { findCompletedInterviewSessionsByUser } = require("../../services/interviewSession.service");
 const { askGroq } = require("./groqClient");
 
 const startInterview = async (req, res) => {
@@ -54,7 +55,7 @@ const getInterviewResult = async (req, res) => {
 
 const getInterviewHistory = async (req, res) => {
   try {
-    const sessions = await InterviewSession.find({ user: req.user._id }).sort({ createdAt: -1 });
+    const sessions = await findCompletedInterviewSessionsByUser(req.user._id);
     res.status(200).json({ success: true, sessions });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
