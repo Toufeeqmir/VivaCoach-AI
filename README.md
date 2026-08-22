@@ -104,6 +104,8 @@ In short: **VivaCoach-AI fuses content quality + vocal delivery + non-verbal cue
 
    GEMINI_API_KEY=your_key
    GROQ_API_KEY=your_key
+   # Optional: override the Groq chat model. This is the default used by the app.
+   GROQ_MODEL=groq/compound-mini
 
    AI_SERVICE_URL=https://your-ai-service-url
    HF_MODEL_URL=https://your-hf-model-endpoint

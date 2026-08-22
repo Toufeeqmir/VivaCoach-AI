@@ -1,5 +1,5 @@
 const Question = require("../../models/Question");
-const { getQuestionModel } = require("./aiClient");
+const { ai } = require("./aiClient");
 
 const generateQuestions = async (req, res) => {
   try {
@@ -7,7 +7,6 @@ const generateQuestions = async (req, res) => {
     const questionCount = Math.min(Math.max(parseInt(count, 10) || 5, 3), 10);
 
     const context = role ? `preparing for a ${role} position` : `preparing for a ${category} interview`;
-    const model = getQuestionModel();
 
     const prompt = `
       You are a professional hiring manager. 
@@ -20,10 +19,12 @@ const generateQuestions = async (req, res) => {
     `;
 
     try {
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
+      const response = await ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: prompt,
+      });
 
+      const text = response.text;
       const cleanJson = text.replace(/```json|```/g, "").trim();
       const parsed = JSON.parse(cleanJson);
 
@@ -61,4 +62,3 @@ const generateQuestions = async (req, res) => {
 };
 
 module.exports = { generateQuestions };
-

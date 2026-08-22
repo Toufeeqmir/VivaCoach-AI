@@ -8,11 +8,13 @@
 const Groq = require("groq-sdk");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+// Keep the coach and interview paths on the same configurable Groq model.
+const GROQ_MODEL = process.env.GROQ_MODEL || "groq/compound-mini";
 
 const groqText = async (prompt, timeoutMs = 15000) => {
   const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error("Groq timeout")), timeoutMs));
   const run = groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+    model: GROQ_MODEL,
     messages: [{ role: "user", content: prompt }],
     temperature: 0.7,
   }).then(r => r.choices[0].message.content);
